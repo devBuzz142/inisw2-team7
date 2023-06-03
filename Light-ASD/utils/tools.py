@@ -84,9 +84,9 @@ def download_videos(args):
             with open('%s/%s_file_list.txt'%(args.visualOrigPathAVA, dataType), 'a') as f:
                 # from f, find fileName, if fileName is not in f, write fileName into f
                 if fileName not in open('%s/%s_file_list.txt'%(args.visualOrigPathAVA, dataType)).read():
-                    f.write(fileName + '\n')    
                     cmd = "wget -P %s https://s3.amazonaws.com/ava-dataset/%s/%s"%(outFolder, dataType, fileName)
                     subprocess.call(cmd, shell=True, stdout=None)
+                    f.write(fileName + '\n')    
 
 def extract_audio(args):
     # Take 1 hour to extract the audio from movies
