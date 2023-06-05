@@ -182,6 +182,7 @@ def extract_video_clips(args):
                 imageFilename = os.path.join(insDir, str("%.2f"%row['frame_timestamp'])+'.jpg')
                 if os.path.isfile(imageFilename):
                     display(imageFilename, 'exists')
+                    continue
 
                 V.set(cv2.CAP_PROP_POS_MSEC, row['frame_timestamp'] * 1e3)
                 _, frame = V.read()
