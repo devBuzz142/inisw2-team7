@@ -214,7 +214,7 @@ def evaluate_network(files, args):
 	# durationSet = {1,2,4,6} # To make the result more reliable
 	durationSet = {1,1,1,2,2,2,3,3,4,5,6} # Use this line can get more reliable result
 	for file in tqdm.tqdm(files, total = len(files)):
-		fileName = os.path.splitext(file.split('/')[-1])[0] # Load audio and video
+		fileName = os.path.splitext(os.path.basename(file))[0] # Load audio and video
 		_, audio = wavfile.read(os.path.join(args.pycropPath, fileName + '.wav'))
 		audioFeature = python_speech_features.mfcc(audio, 16000, numcep = 13, winlen = 0.025, winstep = 0.010)
 		video = cv2.VideoCapture(os.path.join(args.pycropPath, fileName + '.avi'))
