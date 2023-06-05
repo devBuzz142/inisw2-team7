@@ -1,6 +1,8 @@
 import os, subprocess, glob, pandas, tqdm, cv2, numpy
 from scipy.io import wavfile
 
+from IPython.display import display
+
 def init_args(args):
     # The details for the following folders/files can be found in the annotation of the function 'preprocess_AVA' below
     args.modelSavePath    = os.path.join(args.savePath, 'model')
@@ -179,7 +181,7 @@ def extract_video_clips(args):
             for _, row in insData.iterrows():
                 imageFilename = os.path.join(insDir, str("%.2f"%row['frame_timestamp'])+'.jpg')
                 if os.path.isfile(imageFilename):
-                    print(imageFilename, 'exists')
+                    display(imageFilename, 'exists')
 
                 V.set(cv2.CAP_PROP_POS_MSEC, row['frame_timestamp'] * 1e3)
                 _, frame = V.read()
