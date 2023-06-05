@@ -59,10 +59,10 @@ def preprocess_AVA(args):
     #     └── trainval
     # ```
 
-    download_csv(args) # Take 1 minute 
-    download_videos(args) # Take 6 hours
-    extract_audio(args) # Take 1 hour
-    extract_audio_clips(args) # Take 3 minutes
+#    download_csv(args) # Take 1 minute 
+#    download_videos(args) # Take 6 hours
+#    extract_audio(args) # Take 1 hour
+#    extract_audio_clips(args) # Take 3 minutes
     extract_video_clips(args) # Take about 2 days
 
 def download_csv(args): 
@@ -143,15 +143,19 @@ def extract_video_clips(args):
     # If you do not need the data for the test set, you can only deal with the train and val part. That will take 1 day.
     # This procession may have many warning info, you can just ignore it.
     dic = {'train':'trainval', 'val':'trainval', 'test':'test'}
-    for dataType in ['train', 'val', 'test']:
+#    for dataType in ['train', 'val', 'test']:
+    for dataType in ['train', 'val']:
         df = pandas.read_csv(os.path.join(args.trialPathAVA, '%s_orig.csv'%(dataType)))
+        print(df)
         dfNeg = pandas.concat([df[df['label_id'] == 0], df[df['label_id'] == 2]])
         dfPos = df[df['label_id'] == 1]
         insNeg = dfNeg['instance_id'].unique().tolist()
         insPos = dfPos['instance_id'].unique().tolist()
         df = pandas.concat([dfPos, dfNeg]).reset_index(drop=True)
         df = df.sort_values(['entity_id', 'frame_timestamp']).reset_index(drop=True)
+        print(df)
         entityList = df['entity_id'].unique().tolist()
+        print(entityList)
         df = df.groupby('entity_id')
         outDir = os.path.join(args.visualPathAVA, dataType)
         audioDir = os.path.join(args.visualOrigPathAVA, dic[dataType])
