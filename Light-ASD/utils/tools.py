@@ -142,6 +142,7 @@ def extract_video_clips(args):
     # You can optimize this code to save time, while this process is one-time.
     # If you do not need the data for the test set, you can only deal with the train and val part. That will take 1 day.
     # This procession may have many warning info, you can just ignore it.
+    print('start extracting')
     dic = {'train':'trainval', 'val':'trainval', 'test':'test'}
 #    for dataType in ['train', 'val', 'test']:
     for dataType in ['train', 'val']:
@@ -161,6 +162,7 @@ def extract_video_clips(args):
         audioDir = os.path.join(args.visualOrigPathAVA, dic[dataType])
         for l in df['video_id'].unique().tolist():
             d = os.path.join(outDir, l[0])
+            print(d)
             if not os.path.isdir(d):
                 os.makedirs(d)
         for entity in tqdm.tqdm(entityList, total = len(entityList)):
@@ -176,6 +178,9 @@ def extract_video_clips(args):
             j = 0
             for _, row in insData.iterrows():
                 imageFilename = os.path.join(insDir, str("%.2f"%row['frame_timestamp'])+'.jpg')
+                if os.path.isfile(imageFilename):
+                    print(imageFilename, 'exists')
+
                 V.set(cv2.CAP_PROP_POS_MSEC, row['frame_timestamp'] * 1e3)
                 _, frame = V.read()
                 h = numpy.size(frame, 0)
