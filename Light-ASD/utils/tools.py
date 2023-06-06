@@ -162,8 +162,9 @@ def extract_video_clips(args):
             d = os.path.join(outDir, l[0])
             if not os.path.isdir(d):
                 os.makedirs(d)
-        for entity in tqdm.tqdm(entityList[4355:], total=len(entityList)-4355, initial=4355):
+        for entity in tqdm.tqdm(entityList[4477:], total=len(entityList)-4477, initial=4477):
             # 54% 4358/8015 [4:11:17<10:09:38, 10.00s/it]
+            # 4477it
             insData = df.get_group(entity)
             videoKey = insData.iloc[0]['video_id']
             entityID = insData.iloc[0]['entity_id']
