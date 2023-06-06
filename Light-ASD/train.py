@@ -38,19 +38,19 @@ def main():
                           **vars(args))
     trainLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = True, num_workers = args.nDataLoaderThread, pin_memory = True)
 
-    loader = val_loader(trialFileName = args.evalTrialAVA, \
-                        audioPath     = os.path.join(args.audioPathAVA , args.evalDataType), \
-                        visualPath    = os.path.join(args.visualPathAVA, args.evalDataType), \
-                        **vars(args))
-    valLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = False, num_workers = 64, pin_memory = True)
+    # loader = val_loader(trialFileName = args.evalTrialAVA, \
+    #                     audioPath     = os.path.join(args.audioPathAVA , args.evalDataType), \
+    #                     visualPath    = os.path.join(args.visualPathAVA, args.evalDataType), \
+    #                     **vars(args))
+    # valLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = False, num_workers = 64, pin_memory = True)
 
-    if args.evaluation == True:
-        s = ASD(**vars(args))
-        s.loadParameters('weight/pretrain_AVA_CVPR.model')
-        print("Model %s loaded from previous state!"%('pretrain_AVA_CVPR.model'))
-        mAP = s.evaluate_network(loader = valLoader, **vars(args))
-        print("mAP %2.2f%%"%(mAP))
-        quit()
+    # if args.evaluation == True:
+    #     s = ASD(**vars(args))
+    #     s.loadParameters('weight/pretrain_AVA_CVPR.model')
+    #     print("Model %s loaded from previous state!"%('pretrain_AVA_CVPR.model'))
+    #     mAP = s.evaluate_network(loader = valLoader, **vars(args))
+    #     print("mAP %2.2f%%"%(mAP))
+    #     quit()
 
     modelfiles = glob.glob('%s/model_0*.model'%args.modelSavePath)
     modelfiles.sort()  
@@ -67,11 +67,12 @@ def main():
     scoreFile = open(args.scoreSavePath, "a+")
 
     while(1):        
+        print(epoch)
         loss, lr = s.train_network(epoch = epoch, loader = trainLoader, **vars(args))
         
         if epoch % args.testInterval == 0:        
             s.saveParameters(args.modelSavePath + "/model_%04d.model"%epoch)
-            mAPs.append(s.evaluate_network(epoch = epoch, loader = valLoader, **vars(args)))
+            # mAPs.append(s.evaluate_network(epoch = epoch, loader = valLoader, **vars(args)))
             print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, mAP %2.2f%%, bestmAP %2.2f%%"%(epoch, mAPs[-1], max(mAPs)))
             scoreFile.write("%d epoch, LR %f, LOSS %f, mAP %2.2f%%, bestmAP %2.2f%%\n"%(epoch, lr, loss, mAPs[-1], max(mAPs)))
             scoreFile.flush()
