@@ -145,8 +145,7 @@ def extract_video_clips(args):
     # If you do not need the data for the test set, you can only deal with the train and val part. That will take 1 day.
     # This procession may have many warning info, you can just ignore it.
     dic = {'train':'trainval', 'val':'trainval', 'test':'test'}
-#    for dataType in ['train', 'val', 'test']:
-    for dataType in ['val']:
+    for dataType in ['train', 'val', 'test']:
         df = pandas.read_csv(os.path.join(args.trialPathAVA, '%s_orig.csv'%(dataType)))
         dfNeg = pandas.concat([df[df['label_id'] == 0], df[df['label_id'] == 2]])
         dfPos = df[df['label_id'] == 1]
@@ -162,9 +161,7 @@ def extract_video_clips(args):
             d = os.path.join(outDir, l[0])
             if not os.path.isdir(d):
                 os.makedirs(d)
-        for entity in tqdm.tqdm(entityList[4477:], total=len(entityList)-4477, initial=4477):
-            # 54% 4358/8015 [4:11:17<10:09:38, 10.00s/it]
-            # 4477it
+        for entity in tqdm.tqdm(entityList, total=len(entityList)):
             insData = df.get_group(entity)
             videoKey = insData.iloc[0]['video_id']
             entityID = insData.iloc[0]['entity_id']
