@@ -146,7 +146,7 @@ def extract_video_clips(args):
     # This procession may have many warning info, you can just ignore it.
     dic = {'train':'trainval', 'val':'trainval', 'test':'test'}
 #    for dataType in ['train', 'val', 'test']:
-    for dataType in ['train']:
+    for dataType in ['val']:
         df = pandas.read_csv(os.path.join(args.trialPathAVA, '%s_orig.csv'%(dataType)))
         dfNeg = pandas.concat([df[df['label_id'] == 0], df[df['label_id'] == 2]])
         dfPos = df[df['label_id'] == 1]
@@ -162,9 +162,8 @@ def extract_video_clips(args):
             d = os.path.join(outDir, l[0])
             if not os.path.isdir(d):
                 os.makedirs(d)
-        for entity in tqdm.tqdm(entityList[27258:], total=len(entityList)-27258, initial=27258):
-            # 78% 23178/29723 [9:55:41<2:02:35,  1.12s/it][h264 @ 0xeb93600]
-            # 25573
+        for entity in tqdm.tqdm(entityList[4355:], total=len(entityList)-4355, initial=4355):
+            # 54% 4358/8015 [4:11:17<10:09:38, 10.00s/it]
             insData = df.get_group(entity)
             videoKey = insData.iloc[0]['video_id']
             entityID = insData.iloc[0]['entity_id']
