@@ -74,7 +74,7 @@ def load_visual(data, dataPath, numFrames, visualAug):
             faces.append(cv2.resize(face[y:y+new, x:x+new] , (H,H))) 
         elif augType == 'rotate':
             faces.append(cv2.warpAffine(face, M, (H,H)))
-    faces = numpy.array(faces, dtype=np.float32) 
+    faces = numpy.array(faces, dtype=numpy.float32) 
 
     print('load visual end')
     return faces
