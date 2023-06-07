@@ -121,6 +121,9 @@ class train_loader(object):
 
         numpy.array(audioFeatures)
         print(visualFeatures)
+        print(visualFeatures.shape, visualFeatures.dtype)
+        print('--')
+        print(visualFeatures[0])
         print(visualFeatures[0].shape, visualFeatures[0].dtype)
         print(numpy.array(visualFeatures).shape, numpy.array(visualFeatures, dtype=numpy.float32).dtype)
         numpy.array(labels)
