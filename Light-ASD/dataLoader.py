@@ -96,7 +96,7 @@ class train_loader(object):
         self.miniBatch = []      
         mixLst = open(trialFileName).read().splitlines()
         # sort the training set by the length of the videos, shuffle them to make more videos in the same batch belong to different movies
-        sortedMixLst = sorted(mixLst, key=lambda data: (int(data.split('\t')[1]), int(data.split('\t')[-1])), reverse=True)               
+        sortedMixLst = sorted(mixLst, key=lambda data: (int(data.split('\t')[1]), int(data.split('\t')[-1])), reverse=True) 
         start = 0       
         while True:
             length = int(sortedMixLst[start].split('\t')[1])
@@ -111,7 +111,9 @@ class train_loader(object):
         numFrames   = int(batchList[-1].split('\t')[1])
         audioFeatures, visualFeatures, labels = [], [], []
         audioSet = generate_audio_set(self.audioPath, batchList) # load the audios in this batch to do augmentation
-        for line in batchList:
+        print('bactchList')
+        print(len(batchList))
+        for line in batchList[:int(len(batchList)/32)]:
             data = line.split('\t')            
             audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
@@ -119,14 +121,14 @@ class train_loader(object):
 
         numpy.array(audioFeatures)
         print(visualFeatures[0].shape, visualFeatures[0].dtype)
-        print(numpy.array(visualFeatures).shape, numpy.array(visualFeatures).dtype)
+        print(numpy.array(visualFeatures).shape, numpy.array(visualFeatures, dtype=numpy.float32).dtype)
         numpy.array(labels)
 
 
 
-        return torch.FloatTensor(numpy.array(audioFeatures)), \
-               torch.FloatTensor(numpy.array(visualFeatures)), \
-               torch.LongTensor(numpy.array(labels))        
+        return torch.cuda.FloatTensor(numpy.array(audioFeatures)), \
+               torch.cuda.FloatTensor(numpy.array(visualFeatures)), \
+               torch.cuda.LongTensor(numpy.array(labels))        
 
     def __len__(self):
         return len(self.miniBatch)
