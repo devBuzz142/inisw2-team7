@@ -144,9 +144,9 @@ class val_loader(object):
         audioFeatures = [load_audio(data, self.audioPath, numFrames, audioAug = False, audioSet = audioSet)]
         visualFeatures = [load_visual(data, self.visualPath,numFrames, visualAug = False)]
         labels = [load_label(data, numFrames)]         
-        return torch.FloatTensor(numpy.array(audioFeatures)), \
-               torch.FloatTensor(numpy.array(visualFeatures)), \
-               torch.LongTensor(numpy.array(labels))
+        return torch.FloatTensor(numpy.array(audioFeatures), dtype=object), \
+               torch.FloatTensor(numpy.array(visualFeatures), dtype=object), \
+               torch.LongTensor(numpy.array(labels), dtype=object)
 
     def __len__(self):
         return len(self.miniBatch)
