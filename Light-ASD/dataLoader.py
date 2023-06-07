@@ -47,7 +47,6 @@ def load_audio(data, dataPath, numFrames, audioAug, audioSet = None):
     return audio
 
 def load_visual(data, dataPath, numFrames, visualAug): 
-    print('load visual start')
     dataName = data[0]
     videoName = data[0][:11]
     faceFolderPath = os.path.join(dataPath, videoName, dataName)
@@ -76,7 +75,6 @@ def load_visual(data, dataPath, numFrames, visualAug):
             faces.append(cv2.warpAffine(face, M, (H,H)))
     faces = numpy.array(faces) 
 
-    print('load visual end')
     return faces
 
 
@@ -119,13 +117,15 @@ class train_loader(object):
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
             labels.append(load_label(data, numFrames))
 
+        print('loaded')
+
         numpy.array(audioFeatures)
         print(visualFeatures[0].shape, visualFeatures[0].dtype)
         print(numpy.array(visualFeatures).shape, numpy.array(visualFeatures, dtype=numpy.float32).dtype)
         numpy.array(labels)
 
 
-
+        print('return')
         return torch.cuda.FloatTensor(numpy.array(audioFeatures)), \
                torch.cuda.FloatTensor(numpy.array(visualFeatures)), \
                torch.cuda.LongTensor(numpy.array(labels))        
