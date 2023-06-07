@@ -117,7 +117,6 @@ class train_loader(object):
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
             labels.append(load_label(data, numFrames))
 
-        print(visualFeatures)
         numpy.array(audioFeatures)
         numpy.array(visualFeatures)
         numpy.array(labels)
