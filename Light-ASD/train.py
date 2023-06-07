@@ -32,16 +32,20 @@ def main():
         preprocess_AVA(args)
         quit()
 
+    print('loader on train_loader')
     loader = train_loader(trialFileName = args.trainTrialAVA, \
                           audioPath      = os.path.join(args.audioPathAVA , 'train'), \
                           visualPath     = os.path.join(args.visualPathAVA, 'train'), \
                           **vars(args))
+    print('trainloader')
     trainLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = True, num_workers = args.nDataLoaderThread, pin_memory = True)
 
+    print('loader on val_loader')
     loader = val_loader(trialFileName = args.evalTrialAVA, \
                         audioPath     = os.path.join(args.audioPathAVA , args.evalDataType), \
                         visualPath    = os.path.join(args.visualPathAVA, args.evalDataType), \
                         **vars(args))
+    print('valloader'')
     valLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = False, num_workers = 64, pin_memory = True)
 
     if args.evaluation == True:
@@ -52,7 +56,9 @@ def main():
         print("mAP %2.2f%%"%(mAP))
         quit()
 
+    print('get modelfiles')
     modelfiles = glob.glob('%s/model_0*.model'%args.modelSavePath)
+    print('sort modelfiles')
     modelfiles.sort()  
     if len(modelfiles) >= 1:
         print("Model %s loaded from previous state!"%modelfiles[-1])
@@ -60,17 +66,23 @@ def main():
         s = ASD(epoch = epoch, **vars(args))
         s.loadParameters(modelfiles[-1])
     else:
+        print('model load')
         epoch = 1
         s = ASD(epoch = epoch, **vars(args))
 
     mAPs = []
+    print('score file load')
     scoreFile = open(args.scoreSavePath, "a+")
 
     while(1):        
         print(epoch)
+        print('train start')
         loss, lr = s.train_network(epoch = epoch, loader = trainLoader, **vars(args))
+        print(loss, lr)
+        print('train end'')
         
         if epoch % args.testInterval == 0:        
+            print ('save model'')
             s.saveParameters(args.modelSavePath + "/model_%04d.model"%epoch)
             mAPs.append(s.evaluate_network(epoch = epoch, loader = valLoader, **vars(args)))
             print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, mAP %2.2f%%, bestmAP %2.2f%%"%(epoch, mAPs[-1], max(mAPs)))

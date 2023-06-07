@@ -21,20 +21,27 @@ class ASD(nn.Module):
         print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f"%(sum(param.numel() for param in self.model.parameters()) / 1000 / 1000))
 
     def train_network(self, loader, epoch, **kwargs):
+        print('train setting...')
         self.train()
         self.scheduler.step(epoch - 1)  # StepLR
         index, top1, lossV, lossAV, loss = 0, 0, 0, 0, 0
         lr = self.optim.param_groups[0]['lr']
         r = 1.3 - 0.02 * (epoch - 1)
+
+
+        print('train strat!!!')
         for num, (audioFeature, visualFeature, labels) in enumerate(loader, start=1):
             self.zero_grad()
 
+            print('get embed')
             audioEmbed = self.model.forward_audio_frontend(audioFeature[0].cuda())
             visualEmbed = self.model.forward_visual_frontend(visualFeature[0].cuda())
 
+            print('get av, v')
             outsAV= self.model.forward_audio_visual_backend(audioEmbed, visualEmbed)  
             outsV = self.model.forward_visual_backend(visualEmbed)
 
+            print('get loss')
             labels = labels[0].reshape((-1)).cuda() # Loss
             nlossAV, _, _, prec = self.lossAV.forward(outsAV, labels, r)
             nlossV = self.lossV.forward(outsV, labels, r)
@@ -88,7 +95,7 @@ class ASD(nn.Module):
 
     def loadParameters(self, path):
         selfState = self.state_dict()
-        loadedState = torch.load(path)
+        loadedState = torch.load(path, map_location=self.device)
         for name, param in loadedState.items():
             origName = name;
             if name not in selfState:

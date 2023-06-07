@@ -47,6 +47,7 @@ def load_audio(data, dataPath, numFrames, audioAug, audioSet = None):
     return audio
 
 def load_visual(data, dataPath, numFrames, visualAug): 
+    print('load visual start')
     dataName = data[0]
     videoName = data[0][:11]
     faceFolderPath = os.path.join(dataPath, videoName, dataName)
@@ -74,6 +75,10 @@ def load_visual(data, dataPath, numFrames, visualAug):
         elif augType == 'rotate':
             faces.append(cv2.warpAffine(face, M, (H,H)))
     faces = numpy.array(faces)
+    print('faces~~~~')
+    print(faces)
+
+    print('load visual end')
     return faces
 
 
