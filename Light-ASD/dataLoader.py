@@ -111,7 +111,7 @@ class train_loader(object):
         audioSet = generate_audio_set(self.audioPath, batchList) # load the audios in this batch to do augmentation
         print('bactchList')
         print(len(batchList))
-        for line in batchList[:int(len(batchList)/32)]:
+        for line in batchList[:4]:
             data = line.split('\t')            
             audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
