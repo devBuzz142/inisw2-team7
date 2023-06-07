@@ -75,8 +75,6 @@ def load_visual(data, dataPath, numFrames, visualAug):
         elif augType == 'rotate':
             faces.append(cv2.warpAffine(face, M, (H,H)))
     faces = numpy.array(faces)
-    print('faces~~~~')
-    print(faces)
 
     print('load visual end')
     return faces
@@ -118,6 +116,8 @@ class train_loader(object):
             audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
             labels.append(load_label(data, numFrames))
+
+        print(visualFeatures)
         return torch.FloatTensor(numpy.array(audioFeatures)), \
                torch.FloatTensor(numpy.array(visualFeatures)), \
                torch.LongTensor(numpy.array(labels))        
