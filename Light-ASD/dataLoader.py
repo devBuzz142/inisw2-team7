@@ -118,6 +118,10 @@ class train_loader(object):
             labels.append(load_label(data, numFrames))
 
         print(visualFeatures)
+        numpy.array(audioFeatures)
+        numpy.array(visualFeatures)
+        numpy.array(labels)
+        print('return')
         return torch.FloatTensor(numpy.array(audioFeatures)), \
                torch.FloatTensor(numpy.array(visualFeatures)), \
                torch.LongTensor(numpy.array(labels))        
