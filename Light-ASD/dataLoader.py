@@ -129,9 +129,9 @@ class train_loader(object):
 
 
         print('return')
-        return torch.cuda.FloatTensor(numpy.array(audioFeatures)), \
-               torch.cuda.FloatTensor(numpy.array(visualFeatures)), \
-               torch.cuda.LongTensor(numpy.array(labels))        
+        return torch.FloatTensor(numpy.array(audioFeatures)), \
+               torch.FloatTensor(numpy.array(visualFeatures)), \
+               torch.LongTensor(numpy.array(labels))        
 
     def __len__(self):
         return len(self.miniBatch)
