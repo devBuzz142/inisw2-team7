@@ -9,6 +9,12 @@ def main():
     warnings.filterwarnings("ignore")
 
     parser = argparse.ArgumentParser(description = "Model Training")
+    '''
+    이 소스코드의 main을 실행시켰을 때 같이 들어오는 options를 args로 받아온다.
+    해당 args를 관리, 제어하기 위한 parser객체를 생성한다.
+    add_argument의 첫번재 인자, --${optionName}을 통해 args.${optionName}으로 해당 option의 값을 받아올 수 있다.
+    '''
+
     # Training details
     parser.add_argument('--lr',           type=float, default=0.001, help='Learning rate')
     parser.add_argument('--lrDecay',      type=float, default=0.95,  help='Learning rate decay rate')
@@ -16,19 +22,45 @@ def main():
     parser.add_argument('--testInterval', type=int,   default=1,     help='Test and save every [testInterval] epochs')
     parser.add_argument('--batchSize',    type=int,   default=2000,  help='Dynamic batch size, default is 2000 frames')
     parser.add_argument('--nDataLoaderThread', type=int, default=64,  help='Number of loader threads')
+    '''
+    testInterval : 몇 epoch마다 결과를 저장할 것인지
+    if epoch % args.testInterval == 0: 의 방식으로 사용된다.
+    '''
+
     # Data path
     parser.add_argument('--dataPathAVA',  type=str, default="AVADataPath", help='Save path of AVA dataset')
     parser.add_argument('--savePath',     type=str, default="exps/exp1")
+    '''
+    dataPathAVA : AVA dataset의 경로
+    savePath : 결과(model parameter)를 저장할 경로    
+    '''
+
     # Data selection
     parser.add_argument('--evalDataType', type=str, default="val", help='Only for AVA, to choose the dataset for evaluation, val or test')
     # For download dataset only, for evaluation only
     parser.add_argument('--downloadAVA',     dest='downloadAVA', action='store_true', help='Only download AVA dataset and do related preprocess')
     parser.add_argument('--evaluation',      dest='evaluation', action='store_true', help='Only do evaluation by using pretrained model [pretrain_AVA_CVPR.model]')
     args = parser.parse_args()
+    '''
+    받은 option을 parsing하여 args에 저장한다.
+    '''
+
     # Data loader
     args = init_args(args)
+    '''
+    tools.py의 init_args 함수를 통해 args를 초기화한다. (args 추가 설정)
+
+    ------ args 설정 끝 -----
+    ------  본문  시작  -----
+    '''
 
     if args.downloadAVA == True:
+        '''
+        실행 시 download option을 입력했으면
+        args.dataPathAVA가 True값을 가지므로
+        tools.py의 preprocess_AVA 함수를 실행하여
+        데이터 다운로드 및 전처리만 진행하고 종료한다.
+        '''
         preprocess_AVA(args)
         quit()
 
