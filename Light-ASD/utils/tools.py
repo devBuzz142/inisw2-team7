@@ -145,7 +145,7 @@ def extract_video_clips(args):
     # If you do not need the data for the test set, you can only deal with the train and val part. That will take 1 day.
     # This procession may have many warning info, you can just ignore it.
     dic = {'train':'trainval', 'val':'trainval', 'test':'test'}
-    for dataType in ['train', 'val', 'test']:
+    for dataType in ['test']:
         df = pandas.read_csv(os.path.join(args.trialPathAVA, '%s_orig.csv'%(dataType)))
         dfNeg = pandas.concat([df[df['label_id'] == 0], df[df['label_id'] == 2]])
         dfPos = df[df['label_id'] == 1]
@@ -165,6 +165,12 @@ def extract_video_clips(args):
             insData = df.get_group(entity)
             videoKey = insData.iloc[0]['video_id']
             entityID = insData.iloc[0]['entity_id']
+
+            f = open('/content/drive/MyDrive/AVADataPath/clips_videos/test_entity_list.txt', 'a')
+
+            if entityID in open('/content/drive/MyDrive/AVADataPath/clips_videos/test_entity_list.txt').read():
+                continue
+
             videoDir = os.path.join(args.visualOrigPathAVA, dic[dataType])
             videoFile = glob.glob(os.path.join(videoDir, '{}.*'.format(videoKey)))[0]
             V = cv2.VideoCapture(videoFile)
@@ -188,3 +194,5 @@ def extract_video_clips(args):
                 face = frame[y1:y2, x1:x2, :]
                 j = j+1
                 cv2.imwrite(imageFilename, face)
+            else:
+                f.write(entityID + '\n')
