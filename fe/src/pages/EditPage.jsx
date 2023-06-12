@@ -8,6 +8,10 @@ const EditPage = () => {
 
   return (
     <div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="frame">Text Box</div>
+        <div className="frame">Without Box</div>
+      </div>
       <div style={{ width: 720, height: 480, border: "1px solid white" }}>
         <img
           src={`/src/assets/pyframes/${String(selected).padStart(6, "0")}.jpg`}

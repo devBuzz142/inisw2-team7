@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Video Uploader</h1>
+        <h1>WhoSpeak</h1>
         <Tab label="Select Your Language">
           <TabItem label="한국어"></TabItem>
           <TabItem label="English"></TabItem>
