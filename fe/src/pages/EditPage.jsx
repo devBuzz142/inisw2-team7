@@ -1,6 +1,5 @@
 import Editor from "../components/Editor";
 import Frame from "../components/Frame";
-import Subtitle from "../components/Subtitle";
 import { useState } from "react";
 
 const EditPage = () => {
