@@ -10,6 +10,13 @@ const HomePage = () => {
     <div className="App">
       <header className="App-header">
         <h1>Video Uploader</h1>
+        <div>Select Your Langulage</div>
+        <div>
+          <div>한국어</div>
+          <div>English</div>
+          <div>中国语</div>
+          <div>日本語</div>
+        </div>
         <VideoUploader onUpload={handleVideoUpload} />
       </header>
     </div>
