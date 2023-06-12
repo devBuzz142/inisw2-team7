@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const VideoUploader = ({ onUpload }) => {
   const [video, setVideo] = useState();
   const [videoUrl, setVideoUrl] = useState();
+  const videoRef = useRef(null);
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -12,6 +13,11 @@ const VideoUploader = ({ onUpload }) => {
     const url = URL.createObjectURL(file);
 
     setVideoUrl(url);
+
+    // Load the new video source
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
   };
 
   const handleUpload = () => {
@@ -51,7 +57,7 @@ const VideoUploader = ({ onUpload }) => {
       </button>
       {videoUrl && (
         <div style={{ marginTop: "20px" }}>
-          <video width="320" height="240" controls>
+          <video width="320" height="240" controls ref={videoRef}>
             <source src={videoUrl} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
