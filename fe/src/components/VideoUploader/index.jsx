@@ -2,9 +2,15 @@ import { useState } from "react";
 
 const VideoUploader = ({ onUpload }) => {
   const [video, setVideo] = useState();
+  const [videoUrl, setVideoUrl] = useState();
 
   const handleVideoChange = (e) => {
-    setVideo(e.target.files[0]);
+    const file = e.target.files[0];
+    setVideo(file);
+
+    // Create a URL to preview the video
+    const url = URL.createObjectURL(file);
+    setVideoUrl(url);
   };
 
   const handleUpload = () => {
@@ -30,6 +36,14 @@ const VideoUploader = ({ onUpload }) => {
       <button onClick={handleUpload} disabled={!video}>
         Upload
       </button>
+      {videoUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <video width="320" height="240" controls>
+            <source src={videoUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      )}
     </div>
   );
 };
