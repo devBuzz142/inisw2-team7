@@ -1,3 +1,4 @@
+import { Tab, TabItem } from "../components/Tab";
 import VideoUploader from "../components/VideoUploader";
 
 const HomePage = () => {
@@ -10,13 +11,12 @@ const HomePage = () => {
     <div className="App">
       <header className="App-header">
         <h1>Video Uploader</h1>
-        <div>Select Your Langulage</div>
-        <div>
-          <div>한국어</div>
-          <div>English</div>
-          <div>中国语</div>
-          <div>日本語</div>
-        </div>
+        <Tab label="Select Your Language">
+          <TabItem label="한국어"></TabItem>
+          <TabItem label="English"></TabItem>
+          <TabItem label="中国语"></TabItem>
+          <TabItem label="日本語"></TabItem>
+        </Tab>
         <VideoUploader onUpload={handleVideoUpload} />
       </header>
     </div>
