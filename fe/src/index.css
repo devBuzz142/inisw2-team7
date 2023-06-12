@@ -94,7 +94,7 @@ button:focus-visible {
   padding: 0 1.2em;
 }
 
-.Tab_Item {
+.Tab_Item, .frame {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,11 +110,11 @@ button:focus-visible {
   transition: border-color 0.25s;
 }
 
-.Tab_Item:hover {
+.Tab_Item:hover, .frame:hover {
   border-color: #646cff;
 }
 
-.Tab_Item_Active {
+.Tab_Item_Active, .frame_Active {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,4 +142,20 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.frame{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.4em 0.8em;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }
