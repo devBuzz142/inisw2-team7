@@ -10,6 +10,7 @@ const VideoUploader = ({ onUpload }) => {
 
     // Create a URL to preview the video
     const url = URL.createObjectURL(file);
+
     setVideoUrl(url);
   };
 
@@ -31,9 +32,21 @@ const VideoUploader = ({ onUpload }) => {
   };
 
   return (
-    <div>
-      <input type="file" accept="video/*" onChange={handleVideoChange} />
-      <button onClick={handleUpload} disabled={!video}>
+    <div style={{ marginTop: "8px", marginBottom: "8px" }}>
+      <input
+        type="file"
+        accept="video/*"
+        onChange={handleVideoChange}
+        id="videoInput"
+        style={{ display: "none" }}
+      />
+      <label htmlFor="videoInput" className="Button">
+        {video ? "Change a video" : "Choose a video"}
+      </label>
+      <button
+        onClick={handleUpload}
+        disabled={!video}
+        style={{ marginLeft: "8px" }}>
         Upload
       </button>
       {videoUrl && (
