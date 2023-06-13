@@ -1,4 +1,4 @@
-import os, torch, numpy, cv2, random, glob, python_speech_features
+import os, torch, numpy, cv2, random, glob, python_speech_features, pickle
 from scipy.io import wavfile
 from torchvision.transforms import RandomCrop
 
@@ -113,9 +113,14 @@ class train_loader(object):
             audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
             visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
             labels.append(load_label(data, numFrames))
-        return torch.FloatTensor(numpy.array(audioFeatures)), \
+        try:
+            return torch.FloatTensor(numpy.array(audioFeatures)), \
                torch.FloatTensor(numpy.array(visualFeatures)), \
-               torch.LongTensor(numpy.array(labels))        
+               torch.LongTensor(numpy.array(labels)) 
+        except Exception as e :
+            f = open('/content/drive/MyDrive/error.pckl', 'wb')
+            pickle.dump([audioFeatures, visualFeatures, labels], f)
+
 
     def __len__(self):
         return len(self.miniBatch)

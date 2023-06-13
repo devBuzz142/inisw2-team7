@@ -24,7 +24,7 @@ class ASD(nn.Module):
         index, top1, lossV, lossAV, loss = 0, 0, 0, 0, 0
         lr = self.optim.param_groups[0]['lr']
         r = 1.3 - 0.02 * (epoch - 1)
-        for num, (audioFeature, visualFeature, labels) in enumerate(loader, start=1):
+        for num, (audioFeature, visualFeature, labels) in enumerate(tqdm.tqdm(loader), start=1):
             self.zero_grad()
 
             audioEmbed = self.model.forward_audio_frontend(audioFeature[0].cuda())
