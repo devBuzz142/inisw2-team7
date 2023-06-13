@@ -1,13 +1,16 @@
 import Editor from "../components/Editor";
 import Frame from "../components/Frame";
 import Logo from "../components/Logo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchSubtitlesFaces } from "../utils/fetchSubtitlesFaces";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
   const [selected, setSeletced] = useState(1);
+  const [srt, setSrt] = useState([]);
+  const [frameCount, setFrameCount] = useState(0);
 
   const handleSelect = (index) => setSeletced(index);
 
@@ -15,7 +18,23 @@ const EditPage = () => {
     navigate("/result");
   };
 
-  const TEMP_FRAME_LEN = 1274;
+  useEffect(() => {
+    (async () => {
+      const { faces, subtitles } = await fetchSubtitlesFaces();
+
+      const subs = Array.from(Array(faces.length + 1), () => []);
+      for (const [start, mid, end, text] of subtitles) {
+        for (let i = start; i <= end; i++) {
+          if (subs[i].length && subs[i][subs[i].length - 1] == text) continue;
+
+          subs[i].push(text);
+        }
+      }
+
+      setFrameCount(faces.length);
+      setSrt(subs);
+    })();
+  }, []);
 
   return (
     <div>
@@ -24,11 +43,11 @@ const EditPage = () => {
         <div className="frame">Text Box</div>
         <div className="frame">Without Box</div>
       </div>
-      <Editor selected={selected} />
+      <Editor selected={selected} subtitles={srt[selected]} />
       <div>
-        {selected} / {TEMP_FRAME_LEN}
+        {selected} / {frameCount}
       </div>
-      <Frame length={TEMP_FRAME_LEN} handleSelect={handleSelect} />
+      <Frame length={frameCount} handleSelect={handleSelect} />
       <div style={{ marginTop: 16 }}>
         <button>Restore</button>
         <button onClick={handleEditClick}>Edit</button>

@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
 
-const Editor = ({ selected }) => {
+const Editor = ({ selected, subtitles }) => {
   const imgRef = useRef(null);
   const [imagePos, setImagePos] = useState({ pageX: 0, pageY: 0 });
+  console.log(subtitles);
 
   useEffect(() => {
     const handleImageLoad = () => {
@@ -23,10 +24,13 @@ const Editor = ({ selected }) => {
   }, [selected, imgRef]);
 
   return (
-    <div
-      draggable={false}
-      style={{ width: 720, height: 480, border: "1px solid white" }}>
-      <Subtitle position={imagePos}>subtitle subtitle</Subtitle>
+    <div draggable={false} style={{ border: "1px solid white" }}>
+      {subtitles &&
+        subtitles.map((text, index) => (
+          <Subtitle key={index} position={imagePos}>
+            {text}
+          </Subtitle>
+        ))}
       <img
         draggable={false}
         ref={imgRef}
