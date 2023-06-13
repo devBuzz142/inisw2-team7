@@ -116,14 +116,19 @@ class train_loader(object):
         for line in batchList:
             data = line.split('\t')            
 
+            audio = load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet)
             visual = load_visual(data, self.visualPath,numFrames, visualAug = True)
+
+            if audio.shape[0] == 0:
+                continue
+
             if visual.shape[0] == 0:
                 continue
 
             if visual.shape[0] == temp:
                 continue
 
-            audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
+            audioFeatures.append(audio)  
             visualFeatures.append(visual)
             labels.append(load_label(data, numFrames))
         try:
