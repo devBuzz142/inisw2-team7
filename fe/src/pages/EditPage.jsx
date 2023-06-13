@@ -2,11 +2,18 @@ import Editor from "../components/Editor";
 import Frame from "../components/Frame";
 import Logo from "../components/Logo";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const EditPage = () => {
+  const navigate = useNavigate();
+
   const [selected, setSeletced] = useState(0);
 
   const handleSelect = (index) => setSeletced(index);
+
+  const handleEditClick = () => {
+    navigate("/result");
+  };
 
   return (
     <div>
@@ -20,7 +27,7 @@ const EditPage = () => {
       <Frame length={503} handleSelect={handleSelect} />
       <div style={{ marginTop: 16 }}>
         <button>Restore</button>
-        <button>Edit</button>
+        <button onClick={handleEditClick}>Edit</button>
       </div>
     </div>
   );
