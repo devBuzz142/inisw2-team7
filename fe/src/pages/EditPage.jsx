@@ -69,7 +69,11 @@ const EditPage = () => {
       <div>
         {selected} / {frameCount}
       </div>
-      <Frame length={frameCount} handleSelect={handleSelect} />
+      <Frame
+        length={frameCount}
+        selected={selected}
+        handleSelect={handleSelect}
+      />
       <div style={{ marginTop: 16 }}>
         <button>Restore</button>
         <button onClick={handleEditClick}>Edit</button>
