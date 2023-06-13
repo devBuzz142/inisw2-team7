@@ -4,6 +4,9 @@ const Subtitle = ({ children, position }) => {
   const [top, setTop] = useState(position.top);
   const [left, setLeft] = useState(position.left);
 
+  console.log("position: ", position);
+  console.log("subtitle: ", top, left);
+
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 

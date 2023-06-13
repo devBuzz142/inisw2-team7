@@ -1,10 +1,16 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
 
-const Editor = ({ selected, subtitles }) => {
+const Editor = ({ selected, subtitles = [], faces = [] }) => {
+  const { bbox } = faces?.at(0) || { bbox: [0, 0, 0, 0] };
+
   const imgRef = useRef(null);
-  const [imagePos, setImagePos] = useState({ pageX: 0, pageY: 0 });
+
+  const [imagePos, setImagePos] = useState({ top: 0, left: 0 });
+
   console.log(subtitles);
+  console.log("imagePost: ", imagePos);
+  console.log("bbox: ", bbox);
 
   useEffect(() => {
     const handleImageLoad = () => {
@@ -27,7 +33,12 @@ const Editor = ({ selected, subtitles }) => {
     <div draggable={false} style={{ border: "1px solid white" }}>
       {subtitles &&
         subtitles.map((text, index) => (
-          <Subtitle key={index} position={imagePos}>
+          <Subtitle
+            key={index}
+            position={{
+              top: imagePos.top + bbox[0],
+              left: imagePos.left + bbox[1],
+            }}>
             {text}
           </Subtitle>
         ))}

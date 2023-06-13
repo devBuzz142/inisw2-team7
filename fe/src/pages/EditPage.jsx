@@ -10,6 +10,7 @@ const EditPage = () => {
 
   const [selected, setSeletced] = useState(1);
   const [srt, setSrt] = useState([]);
+  const [faces, setFaces] = useState([]); // [start, mid, end, text]
   const [frameCount, setFrameCount] = useState(0);
 
   const handleSelect = (index) => setSeletced(index);
@@ -22,18 +23,14 @@ const EditPage = () => {
     (async () => {
       const { faces, subtitles } = await fetchSubtitlesFaces();
 
-      const subs = Array.from(Array(faces.length + 1), () => []);
       for (const [start, mid, end, text] of subtitles) {
-        for (let i = start; i <= end; i++) {
-          if (subs[i].length && subs[i][subs[i].length - 1] == text) continue;
-
-          subs[i].push(text);
-        }
+        for (let i = start; i <= end; i++) {}
       }
 
-      setSeletced(subs.findIndex((sub) => sub.length));
+      setSeletced(subtitles[0][0]);
+      setFaces([[], ...faces]);
       setFrameCount(faces.length);
-      setSrt(subs);
+      setSrt(subtitles);
     })();
   }, []);
 
@@ -44,7 +41,17 @@ const EditPage = () => {
         <div className="frame">Text Box</div>
         <div className="frame">Without Box</div>
       </div>
-      <Editor selected={selected} subtitles={srt[selected]} />
+      {srt?.length && faces?.length && (
+        <Editor
+          selected={selected}
+          subtitles={srt
+            .filter(
+              ([start, mid, end, _]) => start <= selected && end >= selected
+            )
+            .map(([_, __, ___, text]) => text)}
+          faces={faces[selected]}
+        />
+      )}
       <div>
         {selected} / {frameCount}
       </div>
