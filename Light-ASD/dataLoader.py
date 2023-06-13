@@ -108,10 +108,23 @@ class train_loader(object):
         numFrames   = int(batchList[-1].split('\t')[1])
         audioFeatures, visualFeatures, labels = [], [], []
         audioSet = generate_audio_set(self.audioPath, batchList) # load the audios in this batch to do augmentation
+
+        temp = batchList[0].split('\t')
+        temp = load_visual(temp, self.visualPath,numFrames, visualAug = True)
+        temp = temp.shape[0]
+
         for line in batchList:
             data = line.split('\t')            
+
+            visual = load_visual(data, self.visualPath,numFrames, visualAug = True)
+            if visual.shape[0] == 0:
+                continue
+
+            if visual.shape[0] == temp:
+                continue
+
             audioFeatures.append(load_audio(data, self.audioPath, numFrames, audioAug = True, audioSet = audioSet))  
-            visualFeatures.append(load_visual(data, self.visualPath,numFrames, visualAug = True))
+            visualFeatures.append(visual)
             labels.append(load_label(data, numFrames))
         try:
             return torch.FloatTensor(numpy.array(audioFeatures)), \
