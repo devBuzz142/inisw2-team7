@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
 
-const Editor = ({ selected, subtitles = [] }) => {
+const Editor = ({ selected, subtitles = [], onSubtitleMove }) => {
   const imgRef = useRef(null);
 
   const [imagePos, setImagePos] = useState({
@@ -33,27 +33,26 @@ const Editor = ({ selected, subtitles = [] }) => {
     }
   }, [selected, imgRef]);
 
-  const handleSubtitleMove = (index, newPos) => {};
-
   return (
     <div
       className="editor"
       style={{ position: "relative", outline: "4px solid white" }}>
       {subtitles &&
-        subtitles.map((sub, index) => (
+        subtitles.map((sub) => (
           <Subtitle
-            key={index}
-            index={index}
+            key={"subtitle" + sub.index}
+            index={sub.index}
             imagePos={imagePos}
             position={{
               top: sub.bbox[0],
               left: sub.bbox[1],
             }}
-            onSubtitleMove={handleSubtitleMove}>
+            onSubtitleMove={onSubtitleMove}>
             {sub.text}
           </Subtitle>
         ))}
       <img
+        draggable={false}
         ref={imgRef}
         src={`/src/assets/loki01/pyframes/${String(selected).padStart(
           6,

@@ -23,7 +23,8 @@ const EditPage = () => {
     (async () => {
       const { faces, subtitles } = await fetchSubtitlesFaces();
 
-      const subs = subtitles.map((sub) => ({
+      const subs = subtitles.map((sub, index) => ({
+        index,
         start: sub[0],
         mid: sub[1],
         end: sub[2],
@@ -31,13 +32,23 @@ const EditPage = () => {
         bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
       }));
 
-      console.log(subs.map((v) => faces[v.mid][0]?.bbox || [0, 0, 0, 0]));
-
-      setSeletced(subtitles[0][0]);
+      setSeletced(subs[0].start);
       setFrameCount(faces.length);
       setSrt(subs);
     })();
   }, []);
+
+  const handleSubtitleMove = (index, newPos) => {
+    const newSrt = [...srt];
+    newSrt[index].bbox = [
+      newPos.top,
+      newPos.left,
+      newSrt[index].bbox[2],
+      newSrt[index].bbox[3],
+    ];
+
+    setSrt(newSrt);
+  };
 
   return (
     <div>
@@ -46,13 +57,13 @@ const EditPage = () => {
         <div className="frame">Text Box</div>
         <div className="frame">Without Box</div>
       </div>
-      {srt?.length && faces?.length && (
+      {srt?.length && (
         <Editor
           selected={selected}
           subtitles={srt.filter(
-            ({ start, mid, end }) => start <= selected && end >= selected
+            ({ start, end }) => start <= selected && end >= selected
           )}
-          setSrt={setSrt}
+          onSubtitleMove={handleSubtitleMove}
         />
       )}
       <div>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const Subtitle = ({ children, imagePos, position, onSubtitleMove }) => {
+const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
   const [top, setTop] = useState(position.top);
   const [left, setLeft] = useState(position.left);
   const [width, setWidth] = useState(160);
@@ -21,12 +21,14 @@ const Subtitle = ({ children, imagePos, position, onSubtitleMove }) => {
 
   const handleMouseMove = (e) => {
     if (dragging) {
-      console.log(
-        ref.current.offsetTop,
-        ref.current.offsetLeft,
-        ref.current.offsetWidth,
-        ref.current.offsetHeight
-      );
+      e.preventDefault();
+
+      // console.log(
+      //   ref.current.offsetTop,
+      //   ref.current.offsetLeft,
+      //   ref.current.offsetWidth,
+      //   ref.current.offsetHeight
+      // );
 
       const newLeft = e.clientX + offset.x;
       const newTop = e.clientY + offset.y;
@@ -51,6 +53,16 @@ const Subtitle = ({ children, imagePos, position, onSubtitleMove }) => {
   const handleMouseUp = () => {
     setDragging(false);
   };
+
+  useEffect(() => {
+    const changeSubtitlePosition = () => {
+      if (dragging) return;
+
+      onSubtitleMove(index, { top, left });
+    };
+
+    changeSubtitlePosition();
+  }, [dragging]);
 
   return (
     <div
