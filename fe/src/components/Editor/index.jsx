@@ -1,23 +1,27 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
 
-const Editor = ({ selected, subtitles = [], faces = [] }) => {
-  const { bbox } = faces?.at(0) || { bbox: [0, 0, 0, 0] };
-
+const Editor = ({ selected, subtitles = [] }) => {
   const imgRef = useRef(null);
 
-  const [imagePos, setImagePos] = useState({ top: 0, left: 0 });
-
-  console.log(subtitles);
-  console.log("imagePost: ", imagePos);
-  console.log("bbox: ", bbox);
+  const [imagePos, setImagePos] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     const handleImageLoad = () => {
       if (!imgRef.current) return;
 
       const rect = imgRef.current.getBoundingClientRect();
-      setImagePos({ top: rect.top, left: rect.left });
+      setImagePos({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
     };
 
     if (imgRef.current) {
@@ -29,17 +33,24 @@ const Editor = ({ selected, subtitles = [], faces = [] }) => {
     }
   }, [selected, imgRef]);
 
+  const handleSubtitleMove = (index, newPos) => {};
+
   return (
-    <div className="editor" style={{ outline: "4px solid white" }}>
+    <div
+      className="editor"
+      style={{ position: "relative", outline: "4px solid white" }}>
       {subtitles &&
-        subtitles.map((text, index) => (
+        subtitles.map((sub, index) => (
           <Subtitle
             key={index}
+            index={index}
+            imagePos={imagePos}
             position={{
-              top: imagePos.top + bbox[0],
-              left: imagePos.left + bbox[1],
-            }}>
-            {text}
+              top: sub.bbox[0],
+              left: sub.bbox[1],
+            }}
+            onSubtitleMove={handleSubtitleMove}>
+            {sub.text}
           </Subtitle>
         ))}
       <img

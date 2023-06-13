@@ -1,11 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const Subtitle = ({ children, position }) => {
+const Subtitle = ({ children, imagePos, position, onSubtitleMove }) => {
   const [top, setTop] = useState(position.top);
   const [left, setLeft] = useState(position.left);
-
-  console.log("position: ", position);
-  console.log("subtitle: ", top, left);
+  const [width, setWidth] = useState(160);
+  const [height, setHeight] = useState(0);
 
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -22,10 +21,30 @@ const Subtitle = ({ children, position }) => {
 
   const handleMouseMove = (e) => {
     if (dragging) {
+      console.log(
+        ref.current.offsetTop,
+        ref.current.offsetLeft,
+        ref.current.offsetWidth,
+        ref.current.offsetHeight
+      );
+
       const newLeft = e.clientX + offset.x;
       const newTop = e.clientY + offset.y;
-      setLeft(newLeft);
-      setTop(newTop);
+      setLeft(
+        newLeft < 4
+          ? left
+          : newLeft + width > imagePos.left + imagePos.width
+          ? left
+          : newLeft
+      );
+      setTop(
+        newTop < 4
+          ? top
+          : newTop + ref.current.offsetHeight >
+            imagePos.top - 4 + imagePos.height
+          ? top
+          : newTop
+      );
     }
   };
 
@@ -37,8 +56,9 @@ const Subtitle = ({ children, position }) => {
     <div
       ref={ref}
       style={{
-        fontSize: 24,
         position: "absolute",
+
+        fontSize: 24,
 
         top: top,
         left: left,
@@ -46,7 +66,6 @@ const Subtitle = ({ children, position }) => {
         color: "black",
         backgroundColor: "rgba(255,255,255, 0.4)",
 
-        maxWidth: 160,
         cursor: "grab",
       }}
       onMouseDown={handleMouseDown}

@@ -23,14 +23,19 @@ const EditPage = () => {
     (async () => {
       const { faces, subtitles } = await fetchSubtitlesFaces();
 
-      for (const [start, mid, end, text] of subtitles) {
-        for (let i = start; i <= end; i++) {}
-      }
+      const subs = subtitles.map((sub) => ({
+        start: sub[0],
+        mid: sub[1],
+        end: sub[2],
+        text: sub[3],
+        bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
+      }));
+
+      console.log(subs.map((v) => faces[v.mid][0]?.bbox || [0, 0, 0, 0]));
 
       setSeletced(subtitles[0][0]);
-      setFaces([[], ...faces]);
       setFrameCount(faces.length);
-      setSrt(subtitles);
+      setSrt(subs);
     })();
   }, []);
 
@@ -44,12 +49,10 @@ const EditPage = () => {
       {srt?.length && faces?.length && (
         <Editor
           selected={selected}
-          subtitles={srt
-            .filter(
-              ([start, mid, end, _]) => start <= selected && end >= selected
-            )
-            .map(([_, __, ___, text]) => text)}
-          faces={faces[selected]}
+          subtitles={srt.filter(
+            ({ start, mid, end }) => start <= selected && end >= selected
+          )}
+          setSrt={setSrt}
         />
       )}
       <div>
