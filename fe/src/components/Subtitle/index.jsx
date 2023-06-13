@@ -35,7 +35,6 @@ const Subtitle = ({ children, position }) => {
 
   return (
     <div
-      draggable={false}
       ref={ref}
       style={{
         fontSize: 24,

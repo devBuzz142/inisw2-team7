@@ -30,7 +30,7 @@ const Editor = ({ selected, subtitles = [], faces = [] }) => {
   }, [selected, imgRef]);
 
   return (
-    <div draggable={false} style={{ border: "1px solid white" }}>
+    <div className="editor" style={{ outline: "4px solid white" }}>
       {subtitles &&
         subtitles.map((text, index) => (
           <Subtitle
@@ -43,7 +43,6 @@ const Editor = ({ selected, subtitles = [], faces = [] }) => {
           </Subtitle>
         ))}
       <img
-        draggable={false}
         ref={imgRef}
         src={`/src/assets/loki01/pyframes/${String(selected).padStart(
           6,
