@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import Logo from "../components/Logo";
 
 const ResultPage = () => {
   const videoRef = useRef(null);
@@ -6,9 +7,7 @@ const ResultPage = () => {
 
   return (
     <div>
-      <button>
-        <h2 style={{ marginBottom: 4, marginTop: 4 }}>WhoSpeak</h2>
-      </button>
+      <Logo />
       {videoUrl && (
         <div style={{ marginTop: "20px" }}>
           <video width="320" height="240" controls ref={videoRef}>
