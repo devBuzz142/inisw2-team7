@@ -51,7 +51,7 @@ class ASD(nn.Module):
                 " LossV: %.5f, LossAV: %.5f, Loss: %.5f, ACC: %2.2f%% \r"  %(lossV/(num), lossAV/(num), loss/(num), 100 * (top1/index)))
                 sys.stderr.flush()  
             except Exception as e:
-                f = open('content/drive/MyDrive/error.pckl', 'wb')
+                f = open('/content/drive/MyDrive/error.pckl', 'wb')
                 pickle.dump(['ASD', audioFeature, visualFeature, labels], f)
 
         sys.stdout.write("\n")      
