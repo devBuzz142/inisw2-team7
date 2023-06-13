@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import sys, time, numpy, os, subprocess, pandas, tqdm
+import sys, time, numpy, os, subprocess, pandas, tqdm, pickle
 from subprocess import PIPE
 
 from loss import lossAV, lossV
@@ -27,28 +27,32 @@ class ASD(nn.Module):
         for num, (audioFeature, visualFeature, labels) in enumerate(tqdm.tqdm(loader), start=1):
             self.zero_grad()
 
-            audioEmbed = self.model.forward_audio_frontend(audioFeature[0].cuda())
-            visualEmbed = self.model.forward_visual_frontend(visualFeature[0].cuda())
+            try:
+                audioEmbed = self.model.forward_audio_frontend(audioFeature[0].cuda())
+                visualEmbed = self.model.forward_visual_frontend(visualFeature[0].cuda())
 
-            outsAV= self.model.forward_audio_visual_backend(audioEmbed, visualEmbed)  
-            outsV = self.model.forward_visual_backend(visualEmbed)
+                outsAV= self.model.forward_audio_visual_backend(audioEmbed, visualEmbed)  
+                outsV = self.model.forward_visual_backend(visualEmbed)
 
-            labels = labels[0].reshape((-1)).cuda() # Loss
-            nlossAV, _, _, prec = self.lossAV.forward(outsAV, labels, r)
-            nlossV = self.lossV.forward(outsV, labels, r)
-            nloss = nlossAV + 0.5 * nlossV
+                labels = labels[0].reshape((-1)).cuda() # Loss
+                nlossAV, _, _, prec = self.lossAV.forward(outsAV, labels, r)
+                nlossV = self.lossV.forward(outsV, labels, r)
+                nloss = nlossAV + 0.5 * nlossV
 
-            lossV += nlossV.detach().cpu().numpy()
-            lossAV += nlossAV.detach().cpu().numpy()
-            loss += nloss.detach().cpu().numpy()
-            top1 += prec
-            nloss.backward()
-            self.optim.step()
-            index += len(labels)
-            sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
-            " [%2d] r: %2f, Lr: %5f, Training: %.2f%%, "    %(epoch, r, lr, 100 * (num / loader.__len__())) + \
-            " LossV: %.5f, LossAV: %.5f, Loss: %.5f, ACC: %2.2f%% \r"  %(lossV/(num), lossAV/(num), loss/(num), 100 * (top1/index)))
-            sys.stderr.flush()  
+                lossV += nlossV.detach().cpu().numpy()
+                lossAV += nlossAV.detach().cpu().numpy()
+                loss += nloss.detach().cpu().numpy()
+                top1 += prec
+                nloss.backward()
+                self.optim.step()
+                index += len(labels)
+                sys.stderr.write(time.strftime("%m-%d %H:%M:%S") + \
+                " [%2d] r: %2f, Lr: %5f, Training: %.2f%%, "    %(epoch, r, lr, 100 * (num / loader.__len__())) + \
+                " LossV: %.5f, LossAV: %.5f, Loss: %.5f, ACC: %2.2f%% \r"  %(lossV/(num), lossAV/(num), loss/(num), 100 * (top1/index)))
+                sys.stderr.flush()  
+            except Exception as e:
+                f = open('content/drive/MyDrive/error.pckl', 'wb')
+                pickle.dump(['ASD', audioFeature, visualFeature, labels], f)
 
         sys.stdout.write("\n")      
 

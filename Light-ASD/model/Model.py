@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+import pickle
+
 from model.Classifier import BGRU
 from model.Encoder import visual_encoder, audio_encoder
 
@@ -19,10 +21,15 @@ class ASD_Model(nn.Module):
         x = self.visualEncoder(x)
         return x
 
-    def forward_audio_frontend(self, x):    
-        x = x.unsqueeze(1).transpose(2, 3)     
-        x = self.audioEncoder(x)
-        return x
+    def forward_audio_frontend(self, x):  
+        try:  
+            x = x.unsqueeze(1).transpose(2, 3)     
+            x = self.audioEncoder(x)
+            return x
+        except Exception as e:
+            f = open('/content/drive/MyDrive/error.pckl', 'wb')
+            pickle.dump(['Model_f_a_fe', x], f)
+
 
     def forward_audio_visual_backend(self, x1, x2):  
         x = x1 + x2 

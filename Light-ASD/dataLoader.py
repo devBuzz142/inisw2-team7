@@ -132,7 +132,7 @@ class train_loader(object):
                torch.LongTensor(numpy.array(labels)) 
         except Exception as e :
             f = open('/content/drive/MyDrive/error.pckl', 'wb')
-            pickle.dump([audioFeatures, visualFeatures, labels], f)
+            pickle.dump(['train_loader_get_item', audioFeatures, visualFeatures, labels], f)
 
 
     def __len__(self):
