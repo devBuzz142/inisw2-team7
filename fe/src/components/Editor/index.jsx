@@ -30,7 +30,10 @@ const Editor = ({ selected }) => {
       <img
         draggable={false}
         ref={imgRef}
-        src={`/src/assets/pyframes/${String(selected).padStart(6, "0")}.jpg`}
+        src={`/src/assets/loki01/pyframes/${String(selected).padStart(
+          6,
+          "0"
+        )}.jpg`}
       />
     </div>
   );

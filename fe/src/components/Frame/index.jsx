@@ -21,11 +21,13 @@ const Frame = ({ length, handleSelect }) => {
         .fill(0)
         .map((_, index) => (
           <FrameItem
-            key={"frame" + index}
+            key={"frame" + index + 1}
             src={
-              "/src/assets/pyframes/" + String(index).padStart(6, "0") + ".jpg"
+              "/src/assets/loki01/pyframes/" +
+              String(index + 1).padStart(6, "0") +
+              ".jpg"
             }
-            onClick={() => handleSelect(index)}
+            onClick={() => handleSelect(index + 1)}
           />
         ))}
     </div>
