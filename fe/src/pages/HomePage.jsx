@@ -1,16 +1,22 @@
+import Logo from "../components/Logo";
 import { Tab, TabItem } from "../components/Tab";
 import VideoUploader from "../components/VideoUploader";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
   const handleVideoUpload = (formData) => {
     console.log("Video ready for upload:", formData);
     // Here you might want to handle the formData, e.g. send it to a server.
+
+    navigate("/edit");
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>WhoSpeak</h1>
+        <Logo />
         <Tab label="Select Your Language">
           <TabItem label="한국어"></TabItem>
           <TabItem label="English"></TabItem>
