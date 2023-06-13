@@ -1,5 +1,6 @@
 import Editor from "../components/Editor";
 import Frame from "../components/Frame";
+import Logo from "../components/Logo";
 import { useState } from "react";
 
 const EditPage = () => {
@@ -9,6 +10,7 @@ const EditPage = () => {
 
   return (
     <div>
+      <Logo />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div className="frame">Text Box</div>
         <div className="frame">Without Box</div>

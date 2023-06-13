@@ -16,6 +16,7 @@ const Editor = ({ selected }) => {
     if (imgRef.current) {
       imgRef.current.addEventListener("load", handleImageLoad);
       return () => {
+        if (!imgRef.current) return;
         imgRef.current.removeEventListener("load", handleImageLoad);
       };
     }
