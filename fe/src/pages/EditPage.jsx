@@ -31,6 +31,7 @@ const EditPage = () => {
         }
       }
 
+      setSeletced(subs.findIndex((sub) => sub.length));
       setFrameCount(faces.length);
       setSrt(subs);
     })();
