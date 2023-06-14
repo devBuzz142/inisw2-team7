@@ -39,14 +39,26 @@ body {
 .Main {
   display: flex;
   flex-direction: column;
+
+  padding-top: 32px;
+  padding-left: 32px;
 }
 
 .Nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
+  min-width: 160px;
+  width: 176px;
+  height: 100vh;
 
+  outline: 3px solid green;
+}
+
+.Nav-item-container {
+  margin: 0;
   height: 100%;
-
-  outline: 1px solid skyblue;
 }
 
 a {
