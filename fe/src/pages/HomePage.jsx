@@ -1,8 +1,9 @@
-import Logo from "../components/Logo";
 import { Tab, TabItem } from "../components/Tab";
 import VideoUploader from "../components/VideoUploader";
 import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
+import Nav from "../components/Nav";
+import Main from "../components/Main";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -16,8 +17,16 @@ const HomePage = () => {
 
   return (
     <PageTemplate pageName="Home">
-      <header className="App-header">
-        <Logo />
+      <Nav>
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+        </ul>
+      </Nav>
+      <Main>
         <Tab label="Select Your Language">
           <TabItem label="한국어"></TabItem>
           <TabItem label="English"></TabItem>
@@ -25,7 +34,7 @@ const HomePage = () => {
           <TabItem label="日本語"></TabItem>
         </Tab>
         <VideoUploader onUpload={handleVideoUpload} />
-      </header>
+      </Main>
     </PageTemplate>
   );
 };
