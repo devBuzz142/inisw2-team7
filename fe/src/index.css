@@ -1,3 +1,11 @@
+
+body {
+  margin: 0;
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,64 +22,46 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.App {
+  width: 100vw;
+  height: 100vh;
 }
 
-body {
-  margin: 0;
+.page-template {
   display: flex;
-  min-width: 320px;
-  min-height: 100vh;
+
+  outline: 1px solid pink;
+
+  width: 100%;
+  height: 100%;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.Main {
+  display: flex;
+  flex-direction: column;
+
+
+  padding-top: 32px;
+  padding-left: 32px;
+
+  width: 90%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.Nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  min-width: 160px;
+  width: 240px;
+  height: 100vh;
+
+  border-right: 3px solid #535bf2;
 }
 
-.Button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-.Button:hover {
-  border-color: #646cff;
-}
-
-.Button:focus, .Button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.Nav-item-container {
+  margin: 0;
+  height: 100%;
 }
 
 .Tab_Label {
@@ -79,10 +69,6 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  max-width: 40em;
-  padding: 0 1.2em;
-
-  margin-bottom: 0.4em;
 }
 
 .Tab_Items {
@@ -90,8 +76,6 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 1.2em;
-  max-width: 40em;
-  padding: 0 1.2em;
 }
 
 .Tab_Item, .frame {
@@ -162,4 +146,40 @@ button:focus-visible {
 
 .Editor * {
   user-select: "none";
+}
+
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button, .Button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover, .Button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible, .Button:focus, .Button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }

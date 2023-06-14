@@ -1,7 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
 
-const Editor = ({ selected, subtitles = [], onSubtitleMove }) => {
+const Editor = ({
+  selected,
+  subtitles = [],
+  onSubtitleMove,
+  maxWidth = 1440,
+}) => {
   const imgRef = useRef(null);
 
   const [imagePos, setImagePos] = useState({
@@ -35,8 +40,12 @@ const Editor = ({ selected, subtitles = [], onSubtitleMove }) => {
 
   return (
     <div
-      className="editor"
-      style={{ position: "relative", outline: "4px solid white" }}>
+      className="Editor"
+      style={{
+        position: "relative",
+        outline: "4px solid white",
+        width: imgRef?.current?.offsetWidth || maxWidth,
+      }}>
       {subtitles &&
         subtitles.map((sub) => (
           <Subtitle

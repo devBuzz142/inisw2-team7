@@ -27,11 +27,12 @@ const FrameItem = ({ src, frame, width, isSelected, onClick }) => {
 const Frame = ({ length, selected, handleSelect }) => {
   const scrollRef = useRef(null);
   const frameWidth = 120;
+  const frameHeight = 80;
 
   useEffect(() => {
     if (scrollRef.current && selected) {
-      scrollRef.current.scrollLeft =
-        frameWidth * selected + scrollRef.current.offsetWidth;
+      scrollRef.current.scrollTop =
+        frameHeight * selected + scrollRef.current.offsetHeight;
     }
   }, [scrollRef.current]);
 
@@ -39,7 +40,14 @@ const Frame = ({ length, selected, handleSelect }) => {
     <div
       ref={scrollRef}
       className="frame_container"
-      style={{ display: "flex", width: 1200, overflow: "scroll" }}>
+      style={{
+        display: "flex",
+        flexDirection: "column",
+
+        height: "80%",
+
+        overflowY: "scroll",
+      }}>
       {Array(length)
         .fill(0)
         .map((_, index) => (

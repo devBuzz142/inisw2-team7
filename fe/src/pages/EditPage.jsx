@@ -4,13 +4,15 @@ import Logo from "../components/Logo";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchSubtitlesFaces } from "../utils/fetchSubtitlesFaces";
+import PageTemplate from "./PageTemplate";
+import Nav from "../components/Nav";
+import Main from "../components/Main";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
   const [selected, setSeletced] = useState(1);
   const [srt, setSrt] = useState([]);
-  const [faces, setFaces] = useState([]); // [start, mid, end, text]
   const [frameCount, setFrameCount] = useState(0);
 
   const handleSelect = (index) => setSeletced(index);
@@ -51,34 +53,46 @@ const EditPage = () => {
   };
 
   return (
-    <div>
-      <Logo />
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div className="frame">Text Box</div>
-        <div className="frame">Without Box</div>
-      </div>
-      {srt?.length && (
-        <Editor
+    <PageTemplate pageName="Edit">
+      <Nav>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 80,
+          }}>
+          {selected} / {frameCount}
+        </div>
+        <Frame
+          length={frameCount}
           selected={selected}
-          subtitles={srt.filter(
-            ({ start, end }) => start <= selected && end >= selected
-          )}
-          onSubtitleMove={handleSubtitleMove}
+          handleSelect={handleSelect}
         />
-      )}
-      <div>
-        {selected} / {frameCount}
-      </div>
-      <Frame
-        length={frameCount}
-        selected={selected}
-        handleSelect={handleSelect}
-      />
-      <div style={{ marginTop: 16 }}>
-        <button>Restore</button>
-        <button onClick={handleEditClick}>Edit</button>
-      </div>
-    </div>
+      </Nav>
+      <Main>
+        {srt?.length && (
+          <Editor
+            maxWidth={1440}
+            selected={selected}
+            subtitles={srt.filter(
+              ({ start, end }) => start <= selected && end >= selected
+            )}
+            onSubtitleMove={handleSubtitleMove}
+          />
+        )}
+
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}>
+          <button>Restore</button>
+          <button onClick={handleEditClick}>Edit</button>
+        </div>
+      </Main>
+    </PageTemplate>
   );
 };
 

@@ -38,26 +38,37 @@ const VideoUploader = ({ onUpload }) => {
   };
 
   return (
-    <div style={{ marginTop: "8px", marginBottom: "8px" }}>
-      <input
-        type="file"
-        accept="video/*"
-        onChange={handleVideoChange}
-        id="videoInput"
-        style={{ display: "none" }}
-      />
-      <label htmlFor="videoInput" className="Button">
-        {video ? "Change a video" : "Choose a video"}
-      </label>
-      <button
-        onClick={handleUpload}
-        disabled={!video}
-        style={{ marginLeft: "8px" }}>
-        Upload
-      </button>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+
+        marginTop: "8px",
+        marginBottom: "8px",
+      }}>
+      <div style={{ paddingTop: 24 }}>
+        <input
+          type="file"
+          accept="video/*"
+          onChange={handleVideoChange}
+          id="videoInput"
+          style={{ display: "none" }}
+        />
+        <label htmlFor="videoInput" className="Button">
+          {video ? "Change a video" : "Choose a video"}
+        </label>
+        <button
+          onClick={handleUpload}
+          disabled={!video}
+          style={{ marginLeft: "8px" }}>
+          Upload
+        </button>
+      </div>
       {videoUrl && (
         <div style={{ marginTop: "20px" }}>
-          <video width="320" height="240" controls ref={videoRef}>
+          <video width="1080" controls ref={videoRef}>
             <source src={videoUrl} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
