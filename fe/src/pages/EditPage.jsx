@@ -73,6 +73,7 @@ const EditPage = () => {
       <Main>
         {srt?.length && (
           <Editor
+            maxWidth={1440}
             selected={selected}
             subtitles={srt.filter(
               ({ start, end }) => start <= selected && end >= selected
@@ -81,7 +82,12 @@ const EditPage = () => {
           />
         )}
 
-        <div style={{ marginTop: 16 }}>
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}>
           <button>Restore</button>
           <button onClick={handleEditClick}>Edit</button>
         </div>

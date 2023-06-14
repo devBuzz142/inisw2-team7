@@ -17,15 +17,7 @@ const HomePage = () => {
 
   return (
     <PageTemplate pageName="Home">
-      <Nav>
-        <ul>
-          <li>1</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-        </ul>
-      </Nav>
+      <Nav></Nav>
       <Main>
         <Tab label="Select Your Language">
           <TabItem label="한국어"></TabItem>

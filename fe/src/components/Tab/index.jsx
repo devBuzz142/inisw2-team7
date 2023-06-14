@@ -18,7 +18,9 @@ export const Tab = ({ children, label }) => {
 
   return (
     <div className="Tab">
-      <div className="Tab_Label">{label}</div>
+      <div className="Tab_Label">
+        <h2>{label}</h2>
+      </div>
       <div className="Tab_Items">
         {React.Children.map(children, (child, index) => {
           return React.cloneElement(child, {

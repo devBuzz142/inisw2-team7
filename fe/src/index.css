@@ -40,8 +40,11 @@ body {
   display: flex;
   flex-direction: column;
 
+
   padding-top: 32px;
   padding-left: 32px;
+
+  width: 90%;
 }
 
 .Nav {
@@ -50,10 +53,10 @@ body {
   align-items: stretch;
 
   min-width: 160px;
-  width: 176px;
+  width: 240px;
   height: 100vh;
 
-  outline: 3px solid green;
+  border-right: 3px solid #535bf2;
 }
 
 .Nav-item-container {
@@ -61,69 +64,11 @@ body {
   height: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.Button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-.Button:hover {
-  border-color: #646cff;
-}
-
-.Button:focus, .Button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 .Tab_Label {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  max-width: 40em;
-  padding: 0 1.2em;
-
-  margin-bottom: 0.4em;
 }
 
 .Tab_Items {
@@ -131,8 +76,6 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 1.2em;
-  max-width: 40em;
-  padding: 0 1.2em;
 }
 
 .Tab_Item, .frame {
@@ -205,3 +148,38 @@ button:focus-visible {
   user-select: "none";
 }
 
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button, .Button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover, .Button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible, .Button:focus, .Button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
