@@ -10,11 +10,25 @@ import Main from "../components/Main";
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const [selectedFrame, setSeletcedFrame] = useState(1);
+  const [selected, setSelected] = useState({ frame: 1, scene: 0 });
   const [srt, setSrt] = useState([]);
   const [frameCount, setFrameCount] = useState(0);
 
-  const handleSelectedFrame = (index) => setSeletcedFrame(index);
+  const handleSelected = (type, index) => {
+    if (type === "frame") {
+      const frameIndex = index;
+      const sceneIndex = srt.findIndex(
+        (sub) => sub.start <= frameIndex && sub.end >= frameIndex
+      );
+
+      setSelected({ frame: frameIndex, scene: sceneIndex });
+    } else if (type === "scene") {
+      const sceneIndex = index;
+      const frameIndex = srt[sceneIndex].start;
+
+      setSelected({ frame: frameIndex, scene: sceneIndex });
+    }
+  };
 
   const handleEditClick = () => {
     navigate("/result");
@@ -33,7 +47,7 @@ const EditPage = () => {
         bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
       }));
 
-      setSeletcedFrame(subs[0].start);
+      setSelected({ frame: subs[0].start, scene: 0 });
       setFrameCount(faces.length);
       setSrt(subs);
     })();
@@ -61,21 +75,22 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
-          {selectedFrame} / {frameCount}
+          {selected.frame} / {frameCount}
         </div>
         <FrameDetector
           length={frameCount}
-          selected={selectedFrame}
-          handleSelected={handleSelectedFrame}
+          selected={selected.frame}
+          handleSelected={handleSelected}
         />
       </Nav>
       <Main>
         {srt?.length && (
           <Editor
             maxWidth={1440}
-            selected={selectedFrame}
+            selected={selected.frame}
             subtitles={srt.filter(
-              ({ start, end }) => start <= selectedFrame && end >= selectedFrame
+              ({ start, end }) =>
+                start <= selected.frame && end >= selected.frame
             )}
             onSubtitleMove={handleSubtitleMove}
           />

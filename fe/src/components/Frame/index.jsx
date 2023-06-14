@@ -32,7 +32,7 @@ const FrameDetector = ({ length, selected, handleSelected }) => {
   useEffect(() => {
     if (scrollRef.current && selected) {
       scrollRef.current.scrollTop =
-        frameHeight * selected + scrollRef.current.offsetHeight;
+        frameHeight * selected + scrollRef.current.offsetHeight * 5;
     }
   }, [scrollRef.current]);
 
@@ -61,7 +61,7 @@ const FrameDetector = ({ length, selected, handleSelected }) => {
               String(index + 1).padStart(6, "0") +
               ".jpg"
             }
-            onClick={() => handleSelect(index + 1)}
+            onClick={() => handleSelected("frame", index + 1)}
           />
         ))}
     </div>
