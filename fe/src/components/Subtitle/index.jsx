@@ -35,17 +35,12 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
       setLeft(
         newLeft < 4
           ? left
-          : newLeft + width > imagePos.left + imagePos.width
+          : newLeft > imagePos.width - width - 4
           ? left
           : newLeft
       );
       setTop(
-        newTop < 4
-          ? top
-          : newTop + ref.current.offsetHeight >
-            imagePos.top - 4 + imagePos.height
-          ? top
-          : newTop
+        newTop < 4 ? top : newTop > imagePos.height - height - 4 ? top : newTop
       );
     }
   };
@@ -63,6 +58,13 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
 
     changeSubtitlePosition();
   }, [dragging]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    setWidth(ref.current.offsetWidth);
+    setHeight(ref.current.offsetHeight);
+  });
 
   return (
     <div
