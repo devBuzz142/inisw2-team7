@@ -1,6 +1,5 @@
 import Editor from "../components/Editor";
-import Frame from "../components/Frame";
-import Logo from "../components/Logo";
+import FrameDetector from "../components/Frame";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchSubtitlesFaces } from "../utils/fetchSubtitlesFaces";
@@ -11,11 +10,25 @@ import Main from "../components/Main";
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const [selected, setSeletced] = useState(1);
+  const [selected, setSelected] = useState({ frame: 1, scene: 0 });
   const [srt, setSrt] = useState([]);
   const [frameCount, setFrameCount] = useState(0);
 
-  const handleSelect = (index) => setSeletced(index);
+  const handleSelected = (type, index) => {
+    if (type === "frame") {
+      const frameIndex = index;
+      const sceneIndex = srt.findIndex(
+        (sub) => sub.start <= frameIndex && sub.end >= frameIndex
+      );
+
+      setSelected({ frame: frameIndex, scene: sceneIndex });
+    } else if (type === "scene") {
+      const sceneIndex = index;
+      const frameIndex = srt[sceneIndex].start;
+
+      setSelected({ frame: frameIndex, scene: sceneIndex });
+    }
+  };
 
   const handleEditClick = () => {
     navigate("/result");
@@ -34,7 +47,7 @@ const EditPage = () => {
         bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
       }));
 
-      setSeletced(subs[0].start);
+      setSelected({ frame: subs[0].start, scene: 0 });
       setFrameCount(faces.length);
       setSrt(subs);
     })();
@@ -62,21 +75,42 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
-          {selected} / {frameCount}
+          FRAME
+          {selected.frame} / {frameCount}
         </div>
-        <Frame
+        <FrameDetector
           length={frameCount}
-          selected={selected}
-          handleSelect={handleSelect}
+          selected={selected.frame}
+          handleSelected={handleSelected}
+        />
+      </Nav>
+      <Nav>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 80,
+          }}>
+          SCENE
+          {selected.scene} / {srt.length}
+        </div>
+        <FrameDetector
+          length={srt.length}
+          selected={selected.scene}
+          handleSelected={handleSelected}
+          scene
+          previews={srt.map((sub) => sub.start)}
         />
       </Nav>
       <Main>
         {srt?.length && (
           <Editor
             maxWidth={1440}
-            selected={selected}
+            selected={selected.frame}
             subtitles={srt.filter(
-              ({ start, end }) => start <= selected && end >= selected
+              ({ start, end }) =>
+                start <= selected.frame && end >= selected.frame
             )}
             onSubtitleMove={handleSubtitleMove}
           />
