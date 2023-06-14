@@ -24,7 +24,7 @@ const FrameItem = ({ src, frame, width, isSelected, onClick }) => {
   );
 };
 
-const Frame = ({ length, selected, handleSelect }) => {
+const FrameDetector = ({ length, selected, handleSelected }) => {
   const scrollRef = useRef(null);
   const frameWidth = 120;
   const frameHeight = 80;
@@ -68,4 +68,4 @@ const Frame = ({ length, selected, handleSelect }) => {
   );
 };
 
-export default Frame;
+export default FrameDetector;

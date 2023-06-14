@@ -1,6 +1,5 @@
 import Editor from "../components/Editor";
-import Frame from "../components/Frame";
-import Logo from "../components/Logo";
+import FrameDetector from "../components/Frame";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchSubtitlesFaces } from "../utils/fetchSubtitlesFaces";
@@ -11,11 +10,11 @@ import Main from "../components/Main";
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const [selected, setSeletced] = useState(1);
+  const [selectedFrame, setSeletcedFrame] = useState(1);
   const [srt, setSrt] = useState([]);
   const [frameCount, setFrameCount] = useState(0);
 
-  const handleSelect = (index) => setSeletced(index);
+  const handleSelectedFrame = (index) => setSeletcedFrame(index);
 
   const handleEditClick = () => {
     navigate("/result");
@@ -34,7 +33,7 @@ const EditPage = () => {
         bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
       }));
 
-      setSeletced(subs[0].start);
+      setSeletcedFrame(subs[0].start);
       setFrameCount(faces.length);
       setSrt(subs);
     })();
@@ -62,21 +61,21 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
-          {selected} / {frameCount}
+          {selectedFrame} / {frameCount}
         </div>
-        <Frame
+        <FrameDetector
           length={frameCount}
-          selected={selected}
-          handleSelect={handleSelect}
+          selected={selectedFrame}
+          handleSelected={handleSelectedFrame}
         />
       </Nav>
       <Main>
         {srt?.length && (
           <Editor
             maxWidth={1440}
-            selected={selected}
+            selected={selectedFrame}
             subtitles={srt.filter(
-              ({ start, end }) => start <= selected && end >= selected
+              ({ start, end }) => start <= selectedFrame && end >= selectedFrame
             )}
             onSubtitleMove={handleSubtitleMove}
           />
