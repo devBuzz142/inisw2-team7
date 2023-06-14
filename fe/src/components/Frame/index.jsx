@@ -1,8 +1,9 @@
 import { useRef, useEffect } from "react";
 
-const FrameItem = ({ src, frame, width, isSelected, onClick }) => {
+const FrameItem = ({ src, frame, width, isSelected, onClick, itemRef }) => {
   return (
     <div
+      ref={itemRef}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -24,17 +25,26 @@ const FrameItem = ({ src, frame, width, isSelected, onClick }) => {
   );
 };
 
-const FrameDetector = ({ length, selected, handleSelected }) => {
+const FrameDetector = ({
+  length,
+  selected,
+  handleSelected,
+  scene,
+  previews,
+}) => {
   const scrollRef = useRef(null);
+  const selectedRef = useRef(null);
   const frameWidth = 120;
   const frameHeight = 80;
 
   useEffect(() => {
-    if (scrollRef.current && selected) {
-      scrollRef.current.scrollTop =
-        frameHeight * selected + scrollRef.current.offsetHeight * 5;
+    if (scrollRef.current && selectedRef.current) {
+      scrollRef.current.scrollTop = Math.max(
+        0,
+        selectedRef.current.offsetTop - 80 * 3
+      );
     }
-  }, [scrollRef.current]);
+  }, [scrollRef.current, selectedRef.current]);
 
   return (
     <div
@@ -50,20 +60,30 @@ const FrameDetector = ({ length, selected, handleSelected }) => {
       }}>
       {Array(length)
         .fill(0)
-        .map((_, index) => (
-          <FrameItem
-            key={"frame" + index + 1}
-            frame={index + 1}
-            width={frameWidth}
-            isSelected={index + 1 === selected}
-            src={
-              "/src/assets/loki01/pyframes/" +
-              String(index + 1).padStart(6, "0") +
-              ".jpg"
-            }
-            onClick={() => handleSelected("frame", index + 1)}
-          />
-        ))}
+        .map((_, index) => {
+          const itemIndex = scene ? index : index + 1;
+
+          return (
+            <FrameItem
+              itemRef={itemIndex === selected ? selectedRef : null}
+              key={"frame" + itemIndex}
+              frame={itemIndex + 1}
+              width={frameWidth}
+              isSelected={itemIndex === selected}
+              src={
+                "/src/assets/loki01/pyframes/" +
+                String(scene ? previews[itemIndex] : itemIndex).padStart(
+                  6,
+                  "0"
+                ) +
+                ".jpg"
+              }
+              onClick={() =>
+                handleSelected(scene ? "scene" : "frame", itemIndex)
+              }
+            />
+          );
+        })}
     </div>
   );
 };

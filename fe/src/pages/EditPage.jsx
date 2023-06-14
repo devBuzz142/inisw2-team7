@@ -75,12 +75,32 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
+          FRAME
           {selected.frame} / {frameCount}
         </div>
         <FrameDetector
           length={frameCount}
           selected={selected.frame}
           handleSelected={handleSelected}
+        />
+      </Nav>
+      <Nav>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 80,
+          }}>
+          SCENE
+          {selected.scene} / {srt.length}
+        </div>
+        <FrameDetector
+          length={srt.length}
+          selected={selected.scene}
+          handleSelected={handleSelected}
+          scene
+          previews={srt.map((sub) => sub.start)}
         />
       </Nav>
       <Main>
