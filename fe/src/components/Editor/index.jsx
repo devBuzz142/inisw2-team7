@@ -8,6 +8,7 @@ const Editor = ({
   maxWidth = 1440,
 }) => {
   const imgRef = useRef(null);
+  console.log(subtitles[0].bbox);
 
   const [imagePos, setImagePos] = useState({
     top: 0,
@@ -53,8 +54,8 @@ const Editor = ({
             index={sub.index}
             imagePos={imagePos}
             position={{
-              top: sub.bbox[0],
-              left: sub.bbox[1],
+              top: sub.bbox[1],
+              left: sub.bbox[0],
             }}
             onSubtitleMove={onSubtitleMove}>
             {sub.text}
