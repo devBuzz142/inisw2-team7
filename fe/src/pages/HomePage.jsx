@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
+import { useState } from "react";
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  const [lang, setLang] = useState("kor");
 
   const handleVideoUpload = (formData) => {
     console.log("Video ready for upload:", formData);
