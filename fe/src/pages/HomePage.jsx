@@ -9,7 +9,7 @@ import { useState } from "react";
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const [lang, setLang] = useState("kor");
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleVideoUpload = (formData) => {
     console.log("Video ready for upload:", formData);
@@ -21,7 +21,10 @@ const HomePage = () => {
   return (
     <PageTemplate pageName="Home">
       <Nav>
-        <Tab label="Select Your Language">
+        <Tab
+          label="Select Your Language"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}>
           <TabItem label="한국어"></TabItem>
           <TabItem label="English"></TabItem>
           <TabItem label="中国语"></TabItem>

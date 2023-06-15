@@ -1,4 +1,3 @@
-import { useState } from "react";
 import React from "react";
 
 export const TabItem = ({ label, isActive, onClick }) => {
@@ -11,9 +10,7 @@ export const TabItem = ({ label, isActive, onClick }) => {
   );
 };
 
-export const Tab = ({ children, label }) => {
-  const [activeTab, setActiveTab] = useState(0);
-
+export const Tab = ({ children, label, activeTab, setActiveTab }) => {
   const haneldClick = (index) => setActiveTab(index);
 
   return (
