@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
+import { useState } from "react";
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleVideoUpload = (formData) => {
     console.log("Video ready for upload:", formData);
@@ -17,14 +20,18 @@ const HomePage = () => {
 
   return (
     <PageTemplate pageName="Home">
-      <Nav></Nav>
-      <Main>
-        <Tab label="Select Your Language">
+      <Nav>
+        <Tab
+          label="Select Your Language"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}>
           <TabItem label="한국어"></TabItem>
           <TabItem label="English"></TabItem>
           <TabItem label="中国语"></TabItem>
           <TabItem label="日本語"></TabItem>
         </Tab>
+      </Nav>
+      <Main>
         <VideoUploader onUpload={handleVideoUpload} />
       </Main>
     </PageTemplate>
