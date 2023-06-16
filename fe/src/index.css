@@ -188,3 +188,20 @@ button:focus,
 button:focus-visible, .Button:focus, .Button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.badge {
+  position: "absolute";
+  width: 24px;
+  height: 24px;
+  left: 0;
+  top: 0;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: #ffffff;
+
+  font-size: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

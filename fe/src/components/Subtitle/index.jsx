@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Badge from "../Badge";
 
 const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
   const [top, setTop] = useState(position.top);
@@ -8,6 +9,8 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
 
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const [isHover, setIsHover] = useState(false);
 
   const ref = useRef(null);
 
@@ -40,6 +43,14 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
 
   const handleMouseUp = () => {
     setDragging(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
   };
 
   useEffect(() => {
@@ -77,8 +88,11 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}>
-      {children}
+      onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
+      <Badge />
+      <div>{children}</div>
     </div>
   );
 };
