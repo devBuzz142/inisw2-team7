@@ -1,16 +1,12 @@
-import file from "./assets/loki01/loki01.mp4";
+const UPLOAD_URL = "http://20.214.104.8:8000/video/upload";
+const EDIT_URL = "http://20.214.104.8:8000/video/edit";
 
-const uploadVideo = async (file) => {
-  const url = "http://20.214.104.8:8000/video/upload/";
-
-  let video = await fetch(file);
-  video = await video.blob();
-
+const uploadVideo = async (video) => {
   const formData = new FormData();
-  await formData.append("video", video, "loki01.mp4");
+  await formData.append("video", video, "video-orig.mp4");
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(UPLOAD_URL, {
       method: "POST",
       contentType: "multipart/form-data",
       body: formData,
@@ -21,11 +17,12 @@ const uploadVideo = async (file) => {
     }
 
     const json = await response.json();
-    const downloadUrl = json.download_url;
-    console.log("Download url:", downloadUrl);
+    const { data } = json;
+    const { url } = data;
+    console.log("Download url:", url);
   } catch (error) {
     console.error("Error in uploading file:", error);
   }
 };
 
-uploadVideo(file);
+export { uploadVideo };

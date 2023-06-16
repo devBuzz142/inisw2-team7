@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { uploadVideo } from "../../api";
 
 const VideoUploader = () => {
   const navigate = useNavigate();
@@ -23,11 +24,8 @@ const VideoUploader = () => {
   };
 
   const handleUpload = () => {
-    const formData = new FormData();
-    formData.append("video", video);
-
     // api
-
+    uploadVideo(video);
     navigate("/edit");
   };
 
