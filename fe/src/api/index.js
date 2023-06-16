@@ -19,7 +19,8 @@ const uploadVideo = async (video) => {
     const json = await response.json();
     const { data } = json;
     const { url } = data;
-    console.log("Download url:", url);
+
+    return url;
   } catch (error) {
     console.error("Error in uploading file:", error);
   }

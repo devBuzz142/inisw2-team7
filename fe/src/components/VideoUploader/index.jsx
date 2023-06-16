@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadVideo } from "../../api";
+import JSZip from "jszip";
 
 const VideoUploader = () => {
   const navigate = useNavigate();
@@ -23,9 +24,29 @@ const VideoUploader = () => {
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     // api
-    uploadVideo(video);
+    const url = await uploadVideo(video);
+
+    // zip
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+
+    // jszip 객체 생성
+    const jszip = new JSZip();
+
+    // zip 파일 내용 로드
+    const zip = await jszip.loadAsync(arrayBuffer);
+
+    // zip 파일의 각 항목에 대해 압축 해제
+    const contents = {};
+    zip.forEach(async (relativePath, file) => {
+      const content = await file.async("arraybuffer");
+      contents[relativePath] = content;
+    });
+
+    console.log(contents);
+
     navigate("/edit");
   };
 
