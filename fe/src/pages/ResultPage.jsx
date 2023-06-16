@@ -1,17 +1,36 @@
-import { useRef, useState } from "react";
-import Logo from "../components/Logo";
+import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
 import PageTemplate from "./PageTemplate";
 
 const ResultPage = () => {
   const videoRef = useRef(null);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("/src/assets/loki01/loki01.mp4");
+
+  const handleDownloadClick = async () => {
+    try {
+      const file = await fetch(videoUrl);
+      const fileBlob = await file.blob();
+      const fileUrl = URL.createObjectURL(fileBlob);
+      const fileLink = document.createElement("a");
+
+      fileLink.display = "none";
+      fileLink.href = fileUrl;
+      fileLink.download = "result.mp4";
+      document.body.appendChild(fileLink);
+      fileLink.click();
+      document.body.removeChild(fileLink);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {});
 
   return (
     <PageTemplate pageName="Result">
       <Nav>
-        <button>Download</button>
+        <button onClick={handleDownloadClick}>Download</button>
       </Nav>
       <Main>
         {videoUrl && (
