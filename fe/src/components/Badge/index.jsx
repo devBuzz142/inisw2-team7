@@ -1,15 +1,10 @@
-import { useState } from "react";
-
-const Badge = () => {
-  const [isEdit, setIsEdit] = useState(true);
-
-  const handleClick = () => {
-    setIsEdit(!isEdit);
-  };
-
+const Badge = ({ hidden, onClick, isEdit }) => {
   return (
-    <div className="badge" onClick={handleClick}>
-      {isEdit ? "EDIT" : "DONE"}
+    <div
+      className="badge"
+      onClick={onClick}
+      style={{ visibility: hidden ? "hidden" : "visible" }}>
+      {isEdit ? "DONE" : "EDIT"}
     </div>
   );
 };

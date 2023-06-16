@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import Badge from "../Badge";
 
-const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
+const Subtitle = ({
+  children,
+  imagePos,
+  position,
+  index,
+  text,
+  onSubtitleMove,
+}) => {
   const [top, setTop] = useState(position.top);
   const [left, setLeft] = useState(position.left);
   const [width, setWidth] = useState(160);
@@ -11,6 +18,8 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const [isHover, setIsHover] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editedText, setEditedText] = useState(text);
 
   const ref = useRef(null);
 
@@ -70,8 +79,17 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
     setHeight(ref.current.offsetHeight);
   });
 
+  const handleEdit = () => setIsEdit(!isEdit);
+
+  const handleTextChange = (e) => setEditedText(e.target.value);
+
+  useEffect(() => {
+    // handleSubtitleEdit(index, editedText);
+  }, [isEdit]);
+
   return (
     <div
+      className="subtitle"
       ref={ref}
       style={{
         position: "absolute",
@@ -91,8 +109,16 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
       onMouseUp={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
-      <Badge />
-      <div>{children}</div>
+      <Badge hidden={!isHover} onClick={handleEdit} isEdit={isEdit} />
+      <div className="subtitle-textbox">
+        {isEdit ? (
+          <>
+            <input type="text" value={editedText} onChange={handleTextChange} />
+          </>
+        ) : (
+          editedText
+        )}
+      </div>
     </div>
   );
 };

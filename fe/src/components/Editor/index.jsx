@@ -56,9 +56,9 @@ const Editor = ({
               left: sub.pos[0],
               top: sub.pos[1],
             }}
-            onSubtitleMove={onSubtitleMove}>
-            {sub.text}
-          </Subtitle>
+            text={sub.text}
+            onSubtitleMove={onSubtitleMove}
+          />
         ))}
       <img
         draggable={false}
