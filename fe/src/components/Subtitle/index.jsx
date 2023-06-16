@@ -23,13 +23,6 @@ const Subtitle = ({ children, imagePos, position, index, onSubtitleMove }) => {
     if (dragging) {
       e.preventDefault();
 
-      // console.log(
-      //   ref.current.offsetTop,
-      //   ref.current.offsetLeft,
-      //   ref.current.offsetWidth,
-      //   ref.current.offsetHeight
-      // );
-
       const newLeft = e.clientX + offset.x;
       const newTop = e.clientY + offset.y;
       setLeft(

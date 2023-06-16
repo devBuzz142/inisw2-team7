@@ -2,7 +2,7 @@ import Editor from "../components/Editor";
 import FrameDetector from "../components/Frame";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchSubtitlesFaces } from "../utils/fetchSubtitlesFaces";
+import { fetchSubtitles } from "../utils/fetchSubtitles";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
@@ -18,13 +18,13 @@ const EditPage = () => {
     if (type === "frame") {
       const frameIndex = index;
       const sceneIndex = srt.findIndex(
-        (sub) => sub.start <= frameIndex && sub.end >= frameIndex
+        (sub) => sub.startFrame <= frameIndex && sub.endFrame >= frameIndex
       );
 
       setSelected({ frame: frameIndex, scene: sceneIndex });
     } else if (type === "scene") {
       const sceneIndex = index;
-      const frameIndex = srt[sceneIndex].start;
+      const frameIndex = srt[sceneIndex].startFrame;
 
       setSelected({ frame: frameIndex, scene: sceneIndex });
     }
@@ -34,33 +34,28 @@ const EditPage = () => {
     navigate("/result");
   };
 
+  const FRAME_LEN = 2596;
   useEffect(() => {
     (async () => {
-      const { faces, subtitles } = await fetchSubtitlesFaces();
+      const subtitles = await fetchSubtitles();
 
       const subs = subtitles.map((sub, index) => ({
         index,
-        start: sub[0],
-        mid: sub[1],
-        end: sub[2],
-        text: sub[3],
-        bbox: faces[sub[1]][0]?.bbox || [0, 0, 0, 0],
+        startFrame: sub.start_frame,
+        endFrame: sub.end_frame,
+        text: sub.text,
+        pos: sub.pos,
       }));
 
-      setSelected({ frame: subs[0].start, scene: 0 });
-      setFrameCount(faces.length);
+      setSelected({ frame: subs[0].startFrame, scene: 0 });
+      setFrameCount(FRAME_LEN);
       setSrt(subs);
     })();
   }, []);
 
   const handleSubtitleMove = (index, newPos) => {
     const newSrt = [...srt];
-    newSrt[index].bbox = [
-      newPos.top,
-      newPos.left,
-      newSrt[index].bbox[2],
-      newSrt[index].bbox[3],
-    ];
+    newSrt[index].pos = [newPos.left, newPos.top];
 
     setSrt(newSrt);
   };
@@ -100,7 +95,7 @@ const EditPage = () => {
           selected={selected.scene}
           handleSelected={handleSelected}
           scene
-          previews={srt.map((sub) => sub.start)}
+          previews={srt.map((sub) => sub.startFrame)}
         />
       </Nav>
       <Main>
@@ -109,8 +104,8 @@ const EditPage = () => {
             maxWidth={1440}
             selected={selected.frame}
             subtitles={srt.filter(
-              ({ start, end }) =>
-                start <= selected.frame && end >= selected.frame
+              ({ startFrame, endFrame }) =>
+                startFrame <= selected.frame && endFrame >= selected.frame
             )}
             onSubtitleMove={handleSubtitleMove}
           />

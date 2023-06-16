@@ -53,8 +53,8 @@ const Editor = ({
             index={sub.index}
             imagePos={imagePos}
             position={{
-              left: sub.bbox[0],
-              top: sub.bbox[3],
+              left: sub.pos[0],
+              top: sub.pos[1],
             }}
             onSubtitleMove={onSubtitleMove}>
             {sub.text}
