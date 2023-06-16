@@ -25,4 +25,25 @@ const uploadVideo = async (video) => {
   }
 };
 
-export { uploadVideo };
+const editVideo = async (subtitles) => {
+  try {
+    const response = await fetch(EDIT_URL, {
+      method: "POST",
+      contentType: "application/json",
+      body: JSON.stringify({ data: subtitles }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const json = await response.json();
+    const { data } = json;
+    const { url } = data;
+    console.log("Download url:", url);
+  } catch (error) {
+    console.error("Error in uploading file:", error);
+  }
+};
+
+export { uploadVideo, editVideo };

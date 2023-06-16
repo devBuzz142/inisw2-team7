@@ -6,6 +6,7 @@ import { fetchSubtitles } from "../utils/fetchSubtitles";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
+import { editVideo } from "../api";
 
 const EditPage = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const EditPage = () => {
   };
 
   const handleEditClick = () => {
+    editVideo(srt);
     navigate("/result");
   };
 
