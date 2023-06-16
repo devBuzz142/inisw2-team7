@@ -5,6 +5,7 @@ const Editor = ({
   selected,
   subtitles = [],
   onSubtitleMove,
+  onSubtitleEdit,
   maxWidth = 1440,
 }) => {
   const imgRef = useRef(null);
@@ -58,6 +59,7 @@ const Editor = ({
             }}
             text={sub.text}
             onSubtitleMove={onSubtitleMove}
+            onSubtitleEdit={onSubtitleEdit}
           />
         ))}
       <img

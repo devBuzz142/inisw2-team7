@@ -60,6 +60,13 @@ const EditPage = () => {
     setSrt(newSrt);
   };
 
+  const handleSubtitleEdit = (index, newText) => {
+    const newSrt = [...srt];
+    newSrt[index].text = newText;
+
+    setSrt(newSrt);
+  };
+
   return (
     <PageTemplate pageName="Edit">
       <Nav>
@@ -108,6 +115,7 @@ const EditPage = () => {
                 startFrame <= selected.frame && endFrame >= selected.frame
             )}
             onSubtitleMove={handleSubtitleMove}
+            onSubtitleEdit={handleSubtitleEdit}
           />
         )}
 

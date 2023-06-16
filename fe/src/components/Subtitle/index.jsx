@@ -8,6 +8,7 @@ const Subtitle = ({
   index,
   text,
   onSubtitleMove,
+  onSubtitleEdit,
 }) => {
   const [top, setTop] = useState(position.top);
   const [left, setLeft] = useState(position.left);
@@ -84,7 +85,7 @@ const Subtitle = ({
   const handleTextChange = (e) => setEditedText(e.target.value);
 
   useEffect(() => {
-    // handleSubtitleEdit(index, editedText);
+    onSubtitleEdit(index, editedText);
   }, [isEdit]);
 
   return (
