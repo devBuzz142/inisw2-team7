@@ -5,6 +5,7 @@ const Editor = ({
   selected,
   subtitles = [],
   onSubtitleMove,
+  onSubtitleEdit,
   maxWidth = 1440,
 }) => {
   const imgRef = useRef(null);
@@ -53,12 +54,13 @@ const Editor = ({
             index={sub.index}
             imagePos={imagePos}
             position={{
-              left: sub.bbox[0],
-              top: sub.bbox[3],
+              left: sub.pos[0],
+              top: sub.pos[1],
             }}
-            onSubtitleMove={onSubtitleMove}>
-            {sub.text}
-          </Subtitle>
+            text={sub.text}
+            onSubtitleMove={onSubtitleMove}
+            onSubtitleEdit={onSubtitleEdit}
+          />
         ))}
       <img
         draggable={false}
