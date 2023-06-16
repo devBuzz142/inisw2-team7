@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const VideoUploader = ({ onUpload }) => {
+const VideoUploader = () => {
+  const navigate = useNavigate();
+
   const [video, setVideo] = useState();
   const [videoUrl, setVideoUrl] = useState();
   const videoRef = useRef(null);
@@ -11,7 +14,6 @@ const VideoUploader = ({ onUpload }) => {
 
     // Create a URL to preview the video
     const url = URL.createObjectURL(file);
-
     setVideoUrl(url);
 
     // Load the new video source
@@ -24,17 +26,9 @@ const VideoUploader = ({ onUpload }) => {
     const formData = new FormData();
     formData.append("video", video);
 
-    // You might want to send formData to your server here.
-    // For example, using fetch:
-    // fetch('your-server-url', {
-    //   method: 'POST',
-    //   body: formData
-    // })
+    // api
 
-    // Call the onUpload callback
-    if (onUpload) {
-      onUpload(formData);
-    }
+    navigate("/edit");
   };
 
   return (
