@@ -40,12 +40,23 @@ const VideoUploader = () => {
 
     // zip 파일의 각 항목에 대해 압축 해제
     const contents = {};
-    zip.forEach(async (relativePath, file) => {
-      const content = await file.async("arraybuffer");
-      contents[relativePath] = content;
-    });
+    let subtitles;
 
-    console.log(contents);
+    await zip.forEach(async (relativePath, file) => {
+      console.log(relativePath);
+
+      if (relativePath === "pyframe/") return;
+      if (relativePath.endsWith(".json")) {
+        let data = await file.async("string");
+        subtitles = await JSON.parse(data);
+
+        return;
+      }
+
+      const fileBlob = await file.async("blob");
+      const fileUrl = URL.createObjectURL(fileBlob);
+      contents[Number(relativePath.slice(8, 14))] = fileUrl;
+    });
 
     navigate("/edit");
   };
