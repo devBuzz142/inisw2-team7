@@ -6,8 +6,7 @@ export const useStateContext = () => useContext(StateContext);
 const initialState = {
   selected: { frame: 1, scene: 1 },
   subtitles: [],
-  frameCount: 0,
-  zipUrl: "",
+  frames: "",
   resultUrl: "",
 };
 
@@ -23,15 +22,10 @@ const stateReducer = (state, action) => {
         ...state,
         subtitles: action.payload,
       };
-    case "SET_FRAME_COUNT":
+    case "SET_FRAMES":
       return {
         ...state,
-        frameCount: action.payload,
-      };
-    case "SET_ZIP_URL":
-      return {
-        ...state,
-        zipUrl: action.payload,
+        frames: action.payload,
       };
     case "SET_RESULT_URL":
       return {

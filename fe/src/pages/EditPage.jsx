@@ -2,7 +2,6 @@ import Editor from "../components/Editor";
 import FrameDetector from "../components/Frame";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchSubtitles } from "../utils/fetchSubtitles";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
@@ -13,7 +12,8 @@ const EditPage = () => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useStateContext();
-  const { selected, subtitles, frameCount } = state;
+  const { selected, subtitles, frames } = state;
+  console.log(state);
 
   const handleSelected = (type, index) => {
     if (type === "frame") {
@@ -42,32 +42,29 @@ const EditPage = () => {
     navigate("/result");
   };
 
-  const FRAME_LEN = 2596;
   useEffect(() => {
-    (async () => {
-      const subtitles = await fetchSubtitles();
-
-      const subs = subtitles.map((sub, index) => ({
-        index,
-        startFrame: sub.start_frame,
-        endFrame: sub.end_frame,
-        text: sub.text,
-        pos: sub.pos,
-      }));
-
-      dispatch({
-        type: "SET_SELECTED",
-        payload: { frame: subs[0].startFrame, scene: 0 },
-      });
-      dispatch({
-        type: "SET_FRAME_COUNT",
-        payload: FRAME_LEN,
-      });
-      dispatch({
-        type: "SET_SUBTITLES",
-        payload: subs,
-      });
-    })();
+    // (async () => {
+    //   const subtitles = await fetchSubtitles();
+    //   const subs = subtitles.map((sub, index) => ({
+    //     index,
+    //     startFrame: sub.start_frame,
+    //     endFrame: sub.end_frame,
+    //     text: sub.text,
+    //     pos: sub.pos,
+    //   }));
+    //   dispatch({
+    //     type: "SET_SELECTED",
+    //     payload: { frame: subs[0].startFrame, scene: 0 },
+    //   });
+    //   dispatch({
+    //     type: "SET_FRAME_COUNT",
+    //     payload: FRAME_LEN,
+    //   });
+    //   dispatch({
+    //     type: "SET_SUBTITLES",
+    //     payload: subs,
+    //   });
+    // })();
   }, []);
 
   const handleSubtitleMove = (index, newPos) => {
@@ -101,10 +98,10 @@ const EditPage = () => {
             height: 80,
           }}>
           FRAME
-          {selected.frame} / {frameCount}
+          {selected.frame} / {frames.length}
         </div>
         <FrameDetector
-          length={frameCount}
+          length={frames.length}
           selected={selected.frame}
           handleSelected={handleSelected}
         />

@@ -2,9 +2,12 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadVideo } from "../../api";
 import JSZip from "jszip";
+import { useStateContext } from "../../context/StateProvider";
 
 const VideoUploader = () => {
   const navigate = useNavigate();
+
+  const { dispatch } = useStateContext();
 
   const [video, setVideo] = useState();
   const [videoUrl, setVideoUrl] = useState();
@@ -39,23 +42,43 @@ const VideoUploader = () => {
     const zip = await jszip.loadAsync(arrayBuffer);
 
     // zip 파일의 각 항목에 대해 압축 해제
-    const contents = {};
-    let subtitles;
+    const frames = [null];
 
     await zip.forEach(async (relativePath, file) => {
-      console.log(relativePath);
-
       if (relativePath === "pyframe/") return;
       if (relativePath.endsWith(".json")) {
         let data = await file.async("string");
-        subtitles = await JSON.parse(data);
+        data = await JSON.parse(data);
+        const subtitles = data.data;
+
+        const subs = subtitles.map((sub, index) => ({
+          index,
+          startFrame: sub.start_frame,
+          endFrame: sub.end_frame,
+          text: sub.text,
+          pos: sub.pos,
+        }));
+
+        dispatch({
+          type: "SET_SELECTED",
+          payload: { frame: subs[0].startFrame, scene: 0 },
+        });
+        dispatch({
+          type: "SET_SUBTITLES",
+          payload: subs,
+        });
 
         return;
       }
 
       const fileBlob = await file.async("blob");
       const fileUrl = URL.createObjectURL(fileBlob);
-      contents[Number(relativePath.slice(8, 14))] = fileUrl;
+      frames.push(fileUrl);
+    });
+
+    dispatch({
+      type: "SET_FRAMES",
+      payload: frames,
     });
 
     navigate("/edit");
