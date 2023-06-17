@@ -22,12 +22,18 @@ const EditPage = () => {
         (sub) => sub.startFrame <= frameIndex && sub.endFrame >= frameIndex
       );
 
-      dispatch("SET_SELECTED", { frame: frameIndex, scene: sceneIndex });
+      dispatch({
+        type: "SET_SELECTED",
+        payload: { frame: frameIndex, scene: sceneIndex },
+      });
     } else if (type === "scene") {
       const sceneIndex = index;
       const frameIndex = subtitles[sceneIndex].startFrame;
 
-      dispatch("SET_SELECTED", { frame: frameIndex, scene: sceneIndex });
+      dispatch({
+        type: "SET_SELECTED",
+        payload: { frame: frameIndex, scene: sceneIndex },
+      });
     }
   };
 
@@ -49,10 +55,6 @@ const EditPage = () => {
         pos: sub.pos,
       }));
 
-      // setSelected({ frame: subs[0].startFrame, scene: 0 });
-      // setFrameCount(FRAME_LEN);
-      // setSrt(subs);
-
       dispatch({
         type: "SET_SELECTED",
         payload: { frame: subs[0].startFrame, scene: 0 },
@@ -72,14 +74,20 @@ const EditPage = () => {
     const newSrt = [...subtitles];
     newSrt[index].pos = [newPos.left, newPos.top];
 
-    dispatch("SET_SUBTITLES", newSrt);
+    dispatch({
+      type: "SET_SUBTITLES",
+      payload: newSrt,
+    });
   };
 
   const handleSubtitleEdit = (index, newText) => {
     const newSrt = [...subtitles];
     newSrt[index].text = newText;
 
-    dispatch("SET_SUBTITLES", newSrt);
+    dispatch({
+      type: "SET_SUBTITLES",
+      payload: newSrt,
+    });
   };
 
   return (
