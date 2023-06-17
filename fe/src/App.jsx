@@ -2,12 +2,12 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import EditPage from "./pages/EditPage";
 import ResultPage from "./pages/ResultPage";
-import SubtitleProvider from "./context/SubtitleProvider";
+import StateProvider from "./context/StateProvider";
 
 function App() {
   return (
     <>
-      <SubtitleProvider>
+      <StateProvider>
         <div className="App">
           <BrowserRouter>
             <Routes>
@@ -18,7 +18,7 @@ function App() {
             </Routes>
           </BrowserRouter>
         </div>
-      </SubtitleProvider>
+      </StateProvider>
     </>
   );
 }

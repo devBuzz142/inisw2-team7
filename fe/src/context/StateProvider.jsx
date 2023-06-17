@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 
-const SubtitleContext = createContext();
-export const useSubtitleContext = () => useContext(SubtitleContext);
+const StateContext = createContext();
+export const useStateContext = () => useContext(StateContext);
 
 const initialState = {
   selected: { frame: 1, scene: 1 },
@@ -11,7 +11,7 @@ const initialState = {
   resultUrl: "",
 };
 
-const subtitleReducer = (state, action) => {
+const stateReducer = (state, action) => {
   switch (action.type) {
     case "SET_SELECTED":
       return {
@@ -43,18 +43,18 @@ const subtitleReducer = (state, action) => {
   }
 };
 
-const SubtitleProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(subtitleReducer, initialState);
+const StateProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(stateReducer, initialState);
 
   return (
-    <SubtitleContext.Provider
+    <StateContext.Provider
       value={{
         state,
         dispatch,
       }}>
       {children}
-    </SubtitleContext.Provider>
+    </StateContext.Provider>
   );
 };
 
-export default SubtitleProvider;
+export default StateProvider;

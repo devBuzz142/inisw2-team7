@@ -7,12 +7,12 @@ import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
 import { editVideo } from "../api";
-import { useSubtitleContext } from "../context/SubtitleProvider";
+import { useStateContext } from "../context/StateProvider";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const { state, dispatch } = useSubtitleContext();
+  const { state, dispatch } = useStateContext();
   const { selected, subtitles, frameCount } = state;
 
   const handleSelected = (type, index) => {
