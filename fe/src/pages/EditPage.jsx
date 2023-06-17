@@ -7,32 +7,32 @@ import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
 import { editVideo } from "../api";
+import { useSubtitleContext } from "../context/SubtitleProvider";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const [selected, setSelected] = useState({ frame: 1, scene: 0 });
-  const [srt, setSrt] = useState([]);
-  const [frameCount, setFrameCount] = useState(0);
+  const { state, dispatch } = useSubtitleContext();
+  const { selected, subtitles, frameCount } = state;
 
   const handleSelected = (type, index) => {
     if (type === "frame") {
       const frameIndex = index;
-      const sceneIndex = srt.findIndex(
+      const sceneIndex = subtitles.findIndex(
         (sub) => sub.startFrame <= frameIndex && sub.endFrame >= frameIndex
       );
 
-      setSelected({ frame: frameIndex, scene: sceneIndex });
+      dispatch("SET_SELECTED", { frame: frameIndex, scene: sceneIndex });
     } else if (type === "scene") {
       const sceneIndex = index;
-      const frameIndex = srt[sceneIndex].startFrame;
+      const frameIndex = subtitles[sceneIndex].startFrame;
 
-      setSelected({ frame: frameIndex, scene: sceneIndex });
+      dispatch("SET_SELECTED", { frame: frameIndex, scene: sceneIndex });
     }
   };
 
   const handleEditClick = () => {
-    editVideo(srt);
+    editVideo(subtitles);
     navigate("/result");
   };
 
@@ -49,24 +49,37 @@ const EditPage = () => {
         pos: sub.pos,
       }));
 
-      setSelected({ frame: subs[0].startFrame, scene: 0 });
-      setFrameCount(FRAME_LEN);
-      setSrt(subs);
+      // setSelected({ frame: subs[0].startFrame, scene: 0 });
+      // setFrameCount(FRAME_LEN);
+      // setSrt(subs);
+
+      dispatch({
+        type: "SET_SELECTED",
+        payload: { frame: subs[0].startFrame, scene: 0 },
+      });
+      dispatch({
+        type: "SET_FRAME_COUNT",
+        payload: FRAME_LEN,
+      });
+      dispatch({
+        type: "SET_SUBTITLES",
+        payload: subs,
+      });
     })();
   }, []);
 
   const handleSubtitleMove = (index, newPos) => {
-    const newSrt = [...srt];
+    const newSrt = [...subtitles];
     newSrt[index].pos = [newPos.left, newPos.top];
 
-    setSrt(newSrt);
+    dispatch("SET_SUBTITLES", newSrt);
   };
 
   const handleSubtitleEdit = (index, newText) => {
-    const newSrt = [...srt];
+    const newSrt = [...subtitles];
     newSrt[index].text = newText;
 
-    setSrt(newSrt);
+    dispatch("SET_SUBTITLES", newSrt);
   };
 
   return (
@@ -97,22 +110,22 @@ const EditPage = () => {
             height: 80,
           }}>
           SCENE
-          {selected.scene} / {srt.length}
+          {selected.scene} / {subtitles.length}
         </div>
         <FrameDetector
-          length={srt.length}
+          length={subtitles.length}
           selected={selected.scene}
           handleSelected={handleSelected}
           scene
-          previews={srt.map((sub) => sub.startFrame)}
+          previews={subtitles.map((sub) => sub.startFrame)}
         />
       </Nav>
       <Main>
-        {srt?.length && (
+        {subtitles?.length && (
           <Editor
             maxWidth={1440}
             selected={selected.frame}
-            subtitles={srt.filter(
+            subtitles={subtitles.filter(
               ({ startFrame, endFrame }) =>
                 startFrame <= selected.frame && endFrame >= selected.frame
             )}

@@ -1,6 +1,5 @@
 import { Tab, TabItem } from "../components/Tab";
 import VideoUploader from "../components/VideoUploader";
-import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
