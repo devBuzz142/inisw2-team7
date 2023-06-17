@@ -7,6 +7,8 @@ const initialState = {
   selected: { frame: 1, scene: 1 },
   subtitles: [],
   frameCount: 0,
+  zipUrl: "",
+  resultUrl: "",
 };
 
 const subtitleReducer = (state, action) => {
@@ -25,6 +27,16 @@ const subtitleReducer = (state, action) => {
       return {
         ...state,
         frameCount: action.payload,
+      };
+    case "SET_ZIP_URL":
+      return {
+        ...state,
+        zipUrl: action.payload,
+      };
+    case "SET_RESULT_URL":
+      return {
+        ...state,
+        resultUrl: action.payload,
       };
     default:
       return state;
