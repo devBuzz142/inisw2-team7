@@ -5,24 +5,32 @@ import PageTemplate from "./PageTemplate";
 import { useStateContext } from "../context/StateProvider";
 
 const ResultPage = () => {
-  const videoRef = useRef(null);
-  const [videoUrl, setVideoUrl] = useState(null);
-
   const { state, dispatch } = useStateContext();
   const { resultUrl } = state;
 
+  const [videoUrl, setVideoUrl] = useState(null);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const handleInit = async () => {
+      if (resultUrl) {
+        const file = await fetch(resultUrl);
+        const fileBlob = await file.blob();
+
+        const fileUrl = URL.createObjectURL(fileBlob);
+        setVideoUrl(fileUrl);
+      }
+    };
+
+    handleInit();
+  }, [resultUrl]);
+
   const handleDownloadClick = async () => {
     try {
-      const file = await fetch(resultUrl);
-      const fileBlob = await file.blob();
-
-      const fileUrl = URL.createObjectURL(fileBlob);
-      setVideoUrl(fileUrl);
-
       const fileLink = document.createElement("a");
 
       fileLink.display = "none";
-      fileLink.href = fileUrl;
+      fileLink.href = videoUrl;
       fileLink.download = "result.mp4";
       document.body.appendChild(fileLink);
       fileLink.click();
@@ -32,8 +40,6 @@ const ResultPage = () => {
     }
   };
 
-  useEffect(() => {});
-
   return (
     <PageTemplate pageName="Result">
       <Nav>
@@ -42,7 +48,7 @@ const ResultPage = () => {
       <Main>
         {videoUrl && (
           <div style={{ marginTop: "20px" }}>
-            <video width="320" height="240" controls ref={videoRef}>
+            <video controls ref={videoRef}>
               <source src={videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>

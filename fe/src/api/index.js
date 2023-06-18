@@ -28,7 +28,7 @@ const uploadVideo = async (video, language) => {
 };
 
 const editVideo = async (subtitles) => {
-  const sub = subtitles.map((subtitle) => ({
+  const sub = subtitles.slice(1).map((subtitle) => ({
     start_time: subtitle.startTime,
     end_time: subtitle.endTime,
     text: subtitle.text,
