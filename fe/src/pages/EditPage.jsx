@@ -13,7 +13,7 @@ const EditPage = () => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useStateContext();
-  const { selected, subtitles, frames } = state;
+  const { selected, subtitles, frames, originals } = state;
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,6 +74,13 @@ const EditPage = () => {
     });
   };
 
+  const handleRestoreClick = () => {
+    dispatch({
+      type: "SET_SUBTITLES",
+      payload: originals,
+    });
+  };
+
   return (
     <PageTemplate pageName="Edit">
       {isLoading && <Loading />}
@@ -130,6 +137,7 @@ const EditPage = () => {
             justifyContent: "space-evenly",
           }}>
           <button
+            onClick={handleRestoreClick}
             style={{
               fontSize: 24,
               paddingLeft: 120,

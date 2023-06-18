@@ -8,6 +8,7 @@ const initialState = {
   subtitles: [],
   frames: "",
   resultUrl: "",
+  originals: [],
 };
 
 const stateReducer = (state, action) => {
@@ -31,6 +32,11 @@ const stateReducer = (state, action) => {
       return {
         ...state,
         resultUrl: action.payload,
+      };
+    case "SET_ORIGINALS":
+      return {
+        ...state,
+        originals: action.payload,
       };
     default:
       return state;

@@ -71,6 +71,10 @@ const VideoUploader = ({ language, setIsLoading }) => {
           type: "SET_SUBTITLES",
           payload: [null, ...subs],
         });
+        dispatch({
+          type: "SET_ORIGINALS",
+          payload: [null, ...subs.map((sub) => ({ ...sub }))],
+        });
 
         return;
       }
