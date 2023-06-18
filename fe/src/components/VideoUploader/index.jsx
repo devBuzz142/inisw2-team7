@@ -124,14 +124,18 @@ const VideoUploader = ({ language, setIsLoading }) => {
           자막 생성
         </button>
       </div>
-      {videoUrl && (
+      {
         <div style={{ marginTop: "20px" }}>
-          <video width="1080" controls ref={videoRef}>
-            <source src={videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          {videoUrl ? (
+            <video width="1080" controls ref={videoRef}>
+              <source src={videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <img src="/src/assets/cover.jpg" width="1080" />
+          )}
         </div>
-      )}
+      }
     </div>
   );
 };
