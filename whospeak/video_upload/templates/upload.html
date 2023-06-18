@@ -1,0 +1,133 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+{% comment %} <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="video", accept=".mp4, .avi">
+    <select name="language">
+      <option value="ko">Korean</option>
+      <option value="en">English</option>
+  </select>
+    <button type="submit">Upload</button>
+  </form>  {% endcomment %}
+
+<form id="upload-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="video" accept=".mp4, .avi">
+    <select name="language">
+      <option value="ko">Korean</option>
+      <option value="en">English</option>
+    </select>
+    <button type="submit">Upload</button>
+</form>
+
+<a id="download-link" href="#" style="display: none;">Download</a>
+
+
+
+<form id="upload-form2" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="video" accept=".mp4, .avi">
+  <select name="language">
+    <option value="ko">Korean</option>
+    <option value="en">English</option>
+  </select>
+  <button type="submit">Edit</button>
+</form>
+
+<!-- Initially hidden download button -->
+<a id="download-link2" href="#" style="display: none;">Download</a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#upload-form').on('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: '/video/upload/',  // Change to the actual upload URL
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // On success, show the download button with the received URL
+                $('#download-link').attr('href', response.download_url);
+                $('#download-link').show();
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+  $('#upload-form2').on('submit', function (e) {
+      e.preventDefault();
+      var formData = new FormData(this);
+      $.ajax({
+          url: '/video/edit/',  // Change to the actual upload URL
+          type: 'POST',
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+              // On success, show the download button with the received URL
+              $('#download-link2').attr('href', response.download_url);
+              $('#download-link2').show();
+          }
+      });
+  });
+});
+</script> 
+{% comment %} 
+<form id="upload-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="video" accept=".mp4, .avi">
+  <select name="language">
+    <option value="ko">Korean</option>
+    <option value="en">English</option>
+  </select>
+  <button type="submit">Upload</button>
+</form>
+
+<!-- 새로 추가된 Edit 버튼 -->
+<button id="edit-button" style="display: none;">Edit Video</button>
+
+<!-- 수정된 Download 버튼 -->
+<a id="download-link" href="#" style="display: none;" download>Download</a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+  $('#upload-form').on('submit', function (e) {
+      e.preventDefault();
+      var formData = new FormData(this);
+      $.ajax({
+          url: '/video/upload/',  // Change to the actual upload URL
+          type: 'POST',
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+              // Upload가 성공하면 Edit 버튼을 보여줍니다.
+              $('#edit-button').show();
+          }
+      });
+  });
+
+  // Edit 버튼 클릭시 실행될 함수를 정의합니다.
+  $('#edit-button').on('click', function(e) {
+      e.preventDefault();
+      $.ajax({
+          url: '/video/edit/',  // Edit request를 보낼 URL입니다.
+          type: 'GET',
+          success: function(response) {
+              // Edit 요청이 성공하면 Download 버튼에 URL을 설정하고 보여줍니다.
+              $('#download-link').attr('href', response.download_url);
+              $('#download-link').show();
+          }
+      });
+  });
+});
+</script> {% endcomment %}
