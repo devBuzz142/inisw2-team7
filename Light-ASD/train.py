@@ -1,75 +1,63 @@
-import time, os, torch, argparse, warnings, glob
+import time, os, torch, argparse, warnings, glob   
+from dataLoader import train_loader, val_loader    
+from utils.tools import *                           
+from ASD import ASD                                
 
-from dataLoader import train_loader, val_loader
-from utils.tools import *
-from ASD import ASD
+def main():  
+    warnings.filterwarnings("ignore")  
 
-def main():
-    # This code is modified based on this [repository](https://github.com/TaoRuijie/TalkNet-ASD).
-    warnings.filterwarnings("ignore")
+    parser = argparse.ArgumentParser(description = "Model Training") 
+    
+    parser.add_argument('--lr', type=float, default=0.001)              # 학습률
+    parser.add_argument('--lrDecay', type=float, default=0.95)          # 학습률 감소율
+    parser.add_argument('--maxEpoch', type=int, default=35)             # 최대 에포크
+    parser.add_argument('--testInterval', type=int, default=1)          # 테스트 간격
+    parser.add_argument('--batchSize', type=int, default=2500)          # 배치 사이즈
+    parser.add_argument('--nDataLoaderThread', type=int, default=64)    # 데이터 로드에 사용되는 스레드 수
+    parser.add_argument('--dataPath', type=str, default="DataPath")     # 데이터 경로
+    parser.add_argument('--savePath', type=str, default="exps/exp1")    # 모델 저장 경로
+    parser.add_argument('--evalDataType', type=str, default="val")      # 평가 데이터 타입
 
-    parser = argparse.ArgumentParser(description = "Model Training")
-    # Training details
-    parser.add_argument('--lr',           type=float, default=0.001, help='Learning rate')
-    parser.add_argument('--lrDecay',      type=float, default=0.95,  help='Learning rate decay rate')
-    parser.add_argument('--maxEpoch',     type=int,   default=30,    help='Maximum number of epochs')
-    parser.add_argument('--testInterval', type=int,   default=1,     help='Test and save every [testInterval] epochs')
-    parser.add_argument('--batchSize',    type=int,   default=2000,  help='Dynamic batch size, default is 2000 frames')
-    parser.add_argument('--nDataLoaderThread', type=int, default=64,  help='Number of loader threads')
-    # Data path
-    parser.add_argument('--dataPathAVA',  type=str, default="AVADataPath", help='Save path of AVA dataset')
-    parser.add_argument('--savePath',     type=str, default="exps/exp1")
-    # Data selection
-    parser.add_argument('--evalDataType', type=str, default="val", help='Only for AVA, to choose the dataset for evaluation, val or test')
-    # For download dataset only, for evaluation only
-    parser.add_argument('--downloadAVA',     dest='downloadAVA', action='store_true', help='Only download AVA dataset and do related preprocess')
-    parser.add_argument('--evaluation',      dest='evaluation', action='store_true', help='Only do evaluation by using pretrained model [pretrain_AVA_CVPR.model]')
-    args = parser.parse_args()
-    # Data loader
-    args = init_args(args)
+    args = parser.parse_args()  # 입력받은 인자를 파싱
+    args = init_args(args)      # 입력받은 인자를 초기화하는 함수를 호출
 
-    if args.downloadAVA == True:
-        preprocess_AVA(args)
-        quit()
-
-    loader = train_loader(trialFileName = args.trainTrialAVA, \
-                          audioPath      = os.path.join(args.audioPathAVA , 'train'), \
-                          visualPath     = os.path.join(args.visualPathAVA, 'train'), \
+    # 훈련 데이터 로더
+    loader = train_loader(trialFileName = args.trainTrial, \
+                          audioPath      = os.path.join(args.audioPathDATA , 'train'), \
+                          visualPath     = os.path.join(args.visualPathDATA, 'train'), \
                           **vars(args))
     trainLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = True, num_workers = args.nDataLoaderThread, pin_memory = True)
 
-    loader = val_loader(trialFileName = args.evalTrialAVA, \
-                        audioPath     = os.path.join(args.audioPathAVA , args.evalDataType), \
-                        visualPath    = os.path.join(args.visualPathAVA, args.evalDataType), \
+    # 검증 데이터 로더
+    loader = val_loader(trialFileName = args.evalTrial, \
+                        audioPath     = os.path.join(args.audioPathDATA , args.evalDataType), \
+                        visualPath    = os.path.join(args.visualPathDATA, args.evalDataType), \
                         **vars(args))
     valLoader = torch.utils.data.DataLoader(loader, batch_size = 1, shuffle = False, num_workers = 64, pin_memory = True)
 
-    if args.evaluation == True:
-        s = ASD(**vars(args))
-        s.loadParameters('weight/pretrain_AVA_CVPR.model')
-        print("Model %s loaded from previous state!"%('pretrain_AVA_CVPR.model'))
-        mAP = s.evaluate_network(loader = valLoader, **vars(args))
-        print("mAP %2.2f%%"%(mAP))
-        quit()
-
+    # 이전에 학습된 모델이 있는지 확인
     modelfiles = glob.glob('%s/model_0*.model'%args.modelSavePath)
     modelfiles.sort()  
     if len(modelfiles) >= 1:
+        # 이전에 학습된 모델이 있다면, 가장 최근의 것을 load
         print("Model %s loaded from previous state!"%modelfiles[-1])
         epoch = int(os.path.splitext(os.path.basename(modelfiles[-1]))[0][6:]) + 1
         s = ASD(epoch = epoch, **vars(args))
         s.loadParameters(modelfiles[-1])
     else:
+        # 이전에 학습된 모델이 없다면, 새로운 모델을 생성
         epoch = 1
         s = ASD(epoch = epoch, **vars(args))
 
-    mAPs = []
-    scoreFile = open(args.scoreSavePath, "a+")
+    mAPs = []  # 평균 정밀도를 저장할 리스트를 초기화.
+    scoreFile = open(args.scoreSavePath, "a+")  
 
     while(1):        
+        # 네트워크를 학습
         loss, lr = s.train_network(epoch = epoch, loader = trainLoader, **vars(args))
         
         if epoch % args.testInterval == 0:        
+            # 테스트 간격마다 모델을 저장하고, 네트워크를 평가
             s.saveParameters(args.modelSavePath + "/model_%04d.model"%epoch)
             mAPs.append(s.evaluate_network(epoch = epoch, loader = valLoader, **vars(args)))
             print(time.strftime("%Y-%m-%d %H:%M:%S"), "%d epoch, mAP %2.2f%%, bestmAP %2.2f%%"%(epoch, mAPs[-1], max(mAPs)))
@@ -77,9 +65,9 @@ def main():
             scoreFile.flush()
 
         if epoch >= args.maxEpoch:
-            quit()
+            quit()  
 
-        epoch += 1
+        epoch += 1  
 
 if __name__ == '__main__':
-    main()
+    main() 

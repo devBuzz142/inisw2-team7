@@ -11,14 +11,15 @@ from model.Model import ASD_Model
 class ASD(nn.Module):
     def __init__(self, lr = 0.001, lrDecay = 0.95, **kwargs):
         super(ASD, self).__init__()        
-        self.model = ASD_Model().cuda()
-        self.lossAV = lossAV().cuda()
-        self.lossV = lossV().cuda()
-        self.optim = torch.optim.Adam(self.parameters(), lr = lr)
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size = 1, gamma=lrDecay)
+        self.model = ASD_Model().cuda()     # ASD 모델을 초기화
+        self.lossAV = lossAV().cuda()       # 오디오-비주얼 손실 함수 초기화
+        self.lossV = lossV().cuda()         # 비주얼 손실 함수를 초기화
+        self.optim = torch.optim.Adam(self.parameters(), lr = lr)       # Adam 옵티마이저 설정
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optim, step_size = 1, gamma=lrDecay)  # 학습률 스케줄러 설정
         print(time.strftime("%m-%d %H:%M:%S") + " Model para number = %.2f"%(sum(param.numel() for param in self.model.parameters()) / 1000 / 1000))
 
     def train_network(self, loader, epoch, **kwargs):
+        # 네트워크 훈련 
         self.train()
         self.scheduler.step(epoch - 1)  # StepLR
         index, top1, lossV, lossAV, loss = 0, 0, 0, 0, 0
@@ -55,6 +56,7 @@ class ASD(nn.Module):
         return loss/num, lr
 
     def evaluate_network(self, loader, evalCsvSave, evalOrig, **kwargs):
+        # 네트워크 평가
         self.eval()
         predScores = []
         for audioFeature, visualFeature, labels in tqdm.tqdm(loader):
@@ -77,14 +79,16 @@ class ASD(nn.Module):
         evalRes.drop(['label_id'], axis=1,inplace=True)
         evalRes.drop(['instance_id'], axis=1,inplace=True)
         evalRes.to_csv(evalCsvSave, index=False)
-        cmd = "python -O utils/get_ava_active_speaker_performance.py -g %s -p %s "%(evalOrig, evalCsvSave)
+        cmd = "python -O utils/get_active_speaker_performance.py -g %s -p %s "%(evalOrig, evalCsvSave)
         mAP = float(str(subprocess.run(cmd, shell=True, stdout=PIPE, stderr=PIPE).stdout).split(' ')[2][:5])
         return mAP
 
     def saveParameters(self, path):
+        # 모델의 매개변수 저장
         torch.save(self.state_dict(), path)
 
     def loadParameters(self, path):
+        # 저장된 모델의 매개변수를 로드
         selfState = self.state_dict()
         loadedState = torch.load(path)
         for name, param in loadedState.items():

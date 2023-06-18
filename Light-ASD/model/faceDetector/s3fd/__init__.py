@@ -7,17 +7,14 @@ from .nets import S3FDNet
 from .box_utils import nms_
 
 PATH_WEIGHT = 'model/faceDetector/s3fd/sfd_face.pth'
-if os.path.isfile(PATH_WEIGHT) == False:
-    Link = "1KafnHz7ccT-3IyddBsL5yi2xGtxAKypt"
-    cmd = "gdown --id %s -O %s"%(Link, PATH_WEIGHT)
-    subprocess.call(cmd, shell=True, stdout=None)
+
+# 이미지를 전처리할 때 사용하는 평균 값
 img_mean = np.array([104., 117., 123.])[:, np.newaxis, np.newaxis].astype('float32')
 
 
 class S3FD():
 
     def __init__(self, device='cuda'):
-
         tstamp = time.time()
         self.device = device
 
@@ -30,13 +27,13 @@ class S3FD():
         # print('[S3FD] finished loading (%.4f sec)' % (time.time() - tstamp))
     
     def detect_faces(self, image, conf_th=0.8, scales=[1]):
-
+        # 이미지를 입력받아 얼굴을 검출
         w, h = image.shape[1], image.shape[0]
 
         bboxes = np.empty(shape=(0, 5))
 
         with torch.no_grad():
-            for s in scales:
+            for s in scales:    # 입력 이미지의 크기를 조절
                 scaled_img = cv2.resize(image, dsize=(0, 0), fx=s, fy=s, interpolation=cv2.INTER_LINEAR)
 
                 scaled_img = np.swapaxes(scaled_img, 1, 2)
@@ -53,7 +50,7 @@ class S3FD():
 
                 for i in range(detections.size(1)):
                     j = 0
-                    while detections[0, i, j, 0] > conf_th:
+                    while detections[0, i, j, 0] > conf_th:     # 각 검출 결과에 대해, 정확도가 임계값보다 높은 경우에만 저장
                         score = detections[0, i, j, 0]
                         pt = (detections[0, i, j, 1:] * scale).cpu().numpy()
                         bbox = (pt[0], pt[1], pt[2], pt[3], score)
