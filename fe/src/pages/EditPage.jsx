@@ -144,6 +144,7 @@ const EditPage = () => {
             justifyContent: "space-evenly",
           }}>
           <button
+            className="hover-button"
             onClick={handleRestoreClick}
             style={{
               fontSize: 24,
@@ -153,6 +154,7 @@ const EditPage = () => {
             처음으로
           </button>
           <button
+            className="hover-button"
             disabled={isLoading}
             onClick={handleEditClick}
             style={{

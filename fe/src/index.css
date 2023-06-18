@@ -251,3 +251,7 @@ button:focus-visible, {
 .badge:hover {
   border: 4px solid #646cff;
 }
+
+.hover-button:hover {
+  border-color: #646cff;
+}
