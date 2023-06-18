@@ -22,7 +22,7 @@ const HomePage = () => {
         </Tab>
       </Nav>
       <Main>
-        <VideoUploader />
+        <VideoUploader language={["ko", "en", "zh-CN", "ja"][activeTab]} />
       </Main>
     </PageTemplate>
   );

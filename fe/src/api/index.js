@@ -1,9 +1,10 @@
 const UPLOAD_URL = "http://20.214.104.8:8000/video/upload/";
 const EDIT_URL = "http://20.214.104.8:8000/video/edit/";
 
-const uploadVideo = async (video) => {
+const uploadVideo = async (video, language) => {
   const formData = new FormData();
   await formData.append("video", video, "video-orig.mp4");
+  await formData.append("language", language);
 
   try {
     const response = await fetch(UPLOAD_URL, {

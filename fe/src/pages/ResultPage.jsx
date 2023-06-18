@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
 import PageTemplate from "./PageTemplate";
+import { useStateContext } from "../context/StateProvider";
 
 const ResultPage = () => {
   const videoRef = useRef(null);
-  const [videoUrl, setVideoUrl] = useState("/src/assets/loki01/loki01.mp4");
+
+  const { state, dispatch } = useStateContext();
+  const { resultUrl } = state;
 
   const handleDownloadClick = async () => {
     try {
-      const file = await fetch(videoUrl);
+      const file = await fetch(resultUrl);
       const fileBlob = await file.blob();
       const fileUrl = URL.createObjectURL(fileBlob);
       const fileLink = document.createElement("a");
@@ -33,10 +36,10 @@ const ResultPage = () => {
         <button onClick={handleDownloadClick}>Download</button>
       </Nav>
       <Main>
-        {videoUrl && (
+        {resultUrl && (
           <div style={{ marginTop: "20px" }}>
             <video width="320" height="240" controls ref={videoRef}>
-              <source src={videoUrl} type="video/mp4" />
+              <source src={resultUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>

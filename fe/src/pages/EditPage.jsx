@@ -37,7 +37,13 @@ const EditPage = () => {
 
   const handleEditClick = async () => {
     const url = await editVideo(subtitles);
-    console.log(url);
+
+    dispatch({
+      type: "SET_RESULT_URL",
+      payload: url,
+    });
+
+    await setTimeout(() => {}, 1000);
 
     navigate("/result");
   };

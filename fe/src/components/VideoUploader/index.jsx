@@ -4,7 +4,7 @@ import { uploadVideo } from "../../api";
 import JSZip from "jszip";
 import { useStateContext } from "../../context/StateProvider";
 
-const VideoUploader = () => {
+const VideoUploader = ({ language }) => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useStateContext();
@@ -29,7 +29,7 @@ const VideoUploader = () => {
 
   const handleUpload = async () => {
     // api
-    const url = await uploadVideo(video);
+    const url = await uploadVideo(video, language);
 
     // zip
     const response = await fetch(url);
