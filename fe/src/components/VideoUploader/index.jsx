@@ -4,7 +4,7 @@ import { uploadVideo } from "../../api";
 import JSZip from "jszip";
 import { useStateContext } from "../../context/StateProvider";
 
-const VideoUploader = ({ language }) => {
+const VideoUploader = ({ language, setIsLoading }) => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useStateContext();
@@ -28,6 +28,8 @@ const VideoUploader = ({ language }) => {
   };
 
   const handleUpload = async () => {
+    setIsLoading(true);
+
     // api
     const url = await uploadVideo(video, language);
 
@@ -88,6 +90,7 @@ const VideoUploader = ({ language }) => {
 
     // image loading...
     await new Promise((resolve) => setTimeout(resolve, 1000 * 4));
+    setIsLoading(false);
 
     navigate("/edit");
   };
