@@ -6,12 +6,15 @@ import Nav from "../components/Nav";
 import Main from "../components/Main";
 import { editVideo } from "../api";
 import { useStateContext } from "../context/StateProvider";
+import { useState } from "react";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
   const { state, dispatch } = useStateContext();
   const { selected, subtitles, frames } = state;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelected = (type, index) => {
     if (type === "frame") {
@@ -36,6 +39,7 @@ const EditPage = () => {
   };
 
   const handleEditClick = async () => {
+    setIsLoading(true);
     const url = await editVideo(subtitles);
 
     dispatch({
@@ -45,6 +49,7 @@ const EditPage = () => {
 
     await setTimeout(() => {}, 1000);
 
+    setIsLoading(false);
     navigate("/result");
   };
 
@@ -78,13 +83,15 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
-          FRAME
-          {selected.frame} / {Object.keys(frames).length}
+          SCENE
+          {selected.scene} / {subtitles.length - 1}
         </div>
         <FrameDetector
-          length={frames.length}
-          selected={selected.frame}
+          length={subtitles.length - 1}
+          selected={selected.scene}
           handleSelected={handleSelected}
+          scene
+          previews={subtitles.map((sub) => sub?.startFrame)}
         />
       </Nav>
       <Nav>
@@ -95,15 +102,13 @@ const EditPage = () => {
             alignItems: "center",
             height: 80,
           }}>
-          SCENE
-          {selected.scene} / {subtitles.length - 1}
+          FRAME
+          {selected.frame} / {Object.keys(frames).length}
         </div>
         <FrameDetector
-          length={subtitles.length - 1}
-          selected={selected.scene}
+          length={frames.length}
+          selected={selected.frame}
           handleSelected={handleSelected}
-          scene
-          previews={subtitles.map((sub) => sub?.startFrame)}
         />
       </Nav>
       <Main>
@@ -123,7 +128,9 @@ const EditPage = () => {
             justifyContent: "space-evenly",
           }}>
           <button>Restore</button>
-          <button onClick={handleEditClick}>Edit</button>
+          <button disabled={isLoading} onClick={handleEditClick}>
+            Edit
+          </button>
         </div>
       </Main>
     </PageTemplate>

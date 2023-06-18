@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useStateContext } from "../../context/StateProvider";
+import { frameToTime } from "../../utils/frameToTime";
 
 const FrameItem = ({
   src,
@@ -74,7 +75,11 @@ const FrameDetector = ({ selected, handleSelected, scene, previews }) => {
                 itemRef={index === selected ? selectedRef : null}
                 key={"frame" + index}
                 index={index}
-                time={scene ? subtitles[index].startTime : index}
+                time={
+                  scene
+                    ? frameToTime(subtitles[index].startFrame, 25)
+                    : frameToTime(index, 25)
+                }
                 width={frameWidth}
                 isSelected={index === selected}
                 src={frames[scene ? previews[index] : index]}
