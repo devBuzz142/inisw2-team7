@@ -115,13 +115,13 @@ const VideoUploader = ({ language, setIsLoading }) => {
           style={{ display: "none" }}
         />
         <label htmlFor="videoInput" className="Button">
-          {video ? "Change a video" : "Choose a video"}
+          {video ? "동영상 선택" : "동영상 변경"}
         </label>
         <button
           onClick={handleUpload}
           disabled={!video}
           style={{ marginLeft: "8px" }}>
-          Upload
+          자막 생성
         </button>
       </div>
       {videoUrl && (

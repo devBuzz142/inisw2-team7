@@ -80,6 +80,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   gap: 1.2em;
 }
 
@@ -89,6 +90,7 @@ body {
   justify-content: center;
   gap: 0.4em;
   padding: 0.4em 0.8em;
+  
   border-radius: 8px;
   border: 1px solid transparent;
   font-size: 1em;

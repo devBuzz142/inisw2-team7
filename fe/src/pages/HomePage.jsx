@@ -16,7 +16,7 @@ const HomePage = () => {
       {isLoading && <Loading />}
       <Nav>
         <Tab
-          label="Select Your Language"
+          label="자막 언어"
           activeTab={activeTab}
           setActiveTab={setActiveTab}>
           <TabItem label="한국어" />
