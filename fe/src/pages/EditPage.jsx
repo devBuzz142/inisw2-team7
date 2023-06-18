@@ -7,6 +7,7 @@ import Main from "../components/Main";
 import { editVideo } from "../api";
 import { useStateContext } from "../context/StateProvider";
 import { useState } from "react";
+import Loading from "../components/Loading";
 
 const EditPage = () => {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ const EditPage = () => {
 
   return (
     <PageTemplate pageName="Edit">
+      {isLoading && <Loading />}
       <Nav>
         <div
           style={{
