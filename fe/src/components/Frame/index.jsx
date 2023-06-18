@@ -1,7 +1,15 @@
 import { useRef, useEffect } from "react";
 import { useStateContext } from "../../context/StateProvider";
 
-const FrameItem = ({ src, frame, width, isSelected, onClick, itemRef }) => {
+const FrameItem = ({
+  src,
+  index,
+  time,
+  width,
+  isSelected,
+  onClick,
+  itemRef,
+}) => {
   return (
     <div
       ref={itemRef}
@@ -21,7 +29,8 @@ const FrameItem = ({ src, frame, width, isSelected, onClick, itemRef }) => {
         height={80}
         style={{ objectFit: "cover" }}
       />
-      <div className="frame_number">{frame}</div>
+      <div className="frame_number">{index}</div>
+      <div className="frame_time">{time}</div>
     </div>
   );
 };
@@ -58,17 +67,21 @@ const FrameDetector = ({ selected, handleSelected, scene, previews }) => {
       }}>
       {Array(scene ? subtitles.length : Object.keys(frames).length)
         .fill(0)
-        .map((_, index) => (
-          <FrameItem
-            itemRef={index === selected ? selectedRef : null}
-            key={"frame" + index}
-            frame={index}
-            width={frameWidth}
-            isSelected={index === selected}
-            src={frames[scene ? previews[index] : index]}
-            onClick={() => handleSelected(scene ? "scene" : "frame", index)}
-          />
-        ))
+        .map(
+          (_, index) =>
+            index && (
+              <FrameItem
+                itemRef={index === selected ? selectedRef : null}
+                key={"frame" + index}
+                index={index}
+                time={scene ? subtitles[index].startTime : index}
+                width={frameWidth}
+                isSelected={index === selected}
+                src={frames[scene ? previews[index] : index]}
+                onClick={() => handleSelected(scene ? "scene" : "frame", index)}
+              />
+            )
+        )
         .slice(1)}
     </div>
   );
