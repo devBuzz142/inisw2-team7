@@ -140,7 +140,7 @@ const VideoUploader = ({ language, setIsLoading }) => {
               Your browser does not support the video tag.
             </video>
           ) : (
-            <img src="/src/assets/cover.jpg" width="1080" />
+            <img src="/src/assets/cover.png" width="1080" />
           )}
         </div>
       }
