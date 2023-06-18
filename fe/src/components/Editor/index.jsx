@@ -1,14 +1,17 @@
 import { useRef, useState, useEffect } from "react";
 import Subtitle from "../Subtitle";
+import { useStateContext } from "../../context/StateProvider";
 
-const Editor = ({
-  selected,
-  subtitles = [],
-  onSubtitleMove,
-  onSubtitleEdit,
-  maxWidth = 1440,
-}) => {
+const Editor = ({ onSubtitleMove, onSubtitleEdit, maxWidth = 1440 }) => {
   const imgRef = useRef(null);
+
+  const { state, dispatch } = useStateContext();
+  const { subtitles, selected, frames } = state;
+
+  const frameSubtitles = subtitles.filter(
+    (sub) =>
+      sub?.startFrame <= selected.frame && sub?.endFrame >= selected.frame
+  );
 
   const [imagePos, setImagePos] = useState({
     top: 0,
@@ -47,8 +50,8 @@ const Editor = ({
         outline: "4px solid white",
         width: imgRef?.current?.offsetWidth || maxWidth,
       }}>
-      {subtitles &&
-        subtitles.map((sub) => (
+      {frameSubtitles &&
+        frameSubtitles.map((sub) => (
           <Subtitle
             key={"subtitle" + sub.index}
             index={sub.index}
@@ -62,14 +65,7 @@ const Editor = ({
             onSubtitleEdit={onSubtitleEdit}
           />
         ))}
-      <img
-        draggable={false}
-        ref={imgRef}
-        src={`/src/assets/loki01/pyframes/${String(selected).padStart(
-          6,
-          "0"
-        )}.jpg`}
-      />
+      <img draggable={false} ref={imgRef} src={frames[selected.frame || 1]} />
     </div>
   );
 };

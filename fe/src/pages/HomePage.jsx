@@ -1,22 +1,12 @@
 import { Tab, TabItem } from "../components/Tab";
 import VideoUploader from "../components/VideoUploader";
-import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
 import { useState } from "react";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState(0);
-
-  const handleVideoUpload = (formData) => {
-    console.log("Video ready for upload:", formData);
-    // Here you might want to handle the formData, e.g. send it to a server.
-
-    navigate("/edit");
-  };
 
   return (
     <PageTemplate pageName="Home">
@@ -32,7 +22,7 @@ const HomePage = () => {
         </Tab>
       </Nav>
       <Main>
-        <VideoUploader onUpload={handleVideoUpload} />
+        <VideoUploader language={["ko", "en", "zh-CN", "ja"][activeTab]} />
       </Main>
     </PageTemplate>
   );

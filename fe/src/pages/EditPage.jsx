@@ -1,70 +1,71 @@
 import Editor from "../components/Editor";
 import FrameDetector from "../components/Frame";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchSubtitles } from "../utils/fetchSubtitles";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
 import Main from "../components/Main";
+import { editVideo } from "../api";
+import { useStateContext } from "../context/StateProvider";
 
 const EditPage = () => {
   const navigate = useNavigate();
 
-  const [selected, setSelected] = useState({ frame: 1, scene: 0 });
-  const [srt, setSrt] = useState([]);
-  const [frameCount, setFrameCount] = useState(0);
+  const { state, dispatch } = useStateContext();
+  const { selected, subtitles, frames } = state;
 
   const handleSelected = (type, index) => {
     if (type === "frame") {
       const frameIndex = index;
-      const sceneIndex = srt.findIndex(
-        (sub) => sub.startFrame <= frameIndex && sub.endFrame >= frameIndex
+      const sceneIndex = subtitles.findIndex(
+        (sub) => sub?.startFrame <= frameIndex && sub?.endFrame >= frameIndex
       );
 
-      setSelected({ frame: frameIndex, scene: sceneIndex });
+      dispatch({
+        type: "SET_SELECTED",
+        payload: { frame: frameIndex, scene: sceneIndex },
+      });
     } else if (type === "scene") {
       const sceneIndex = index;
-      const frameIndex = srt[sceneIndex].startFrame;
+      const frameIndex = subtitles[sceneIndex].startFrame;
 
-      setSelected({ frame: frameIndex, scene: sceneIndex });
+      dispatch({
+        type: "SET_SELECTED",
+        payload: { frame: frameIndex, scene: sceneIndex },
+      });
     }
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
+    const url = await editVideo(subtitles);
+
+    dispatch({
+      type: "SET_RESULT_URL",
+      payload: url,
+    });
+
+    await setTimeout(() => {}, 1000);
+
     navigate("/result");
   };
 
-  const FRAME_LEN = 2596;
-  useEffect(() => {
-    (async () => {
-      const subtitles = await fetchSubtitles();
-
-      const subs = subtitles.map((sub, index) => ({
-        index,
-        startFrame: sub.start_frame,
-        endFrame: sub.end_frame,
-        text: sub.text,
-        pos: sub.pos,
-      }));
-
-      setSelected({ frame: subs[0].startFrame, scene: 0 });
-      setFrameCount(FRAME_LEN);
-      setSrt(subs);
-    })();
-  }, []);
-
   const handleSubtitleMove = (index, newPos) => {
-    const newSrt = [...srt];
+    const newSrt = [...subtitles];
     newSrt[index].pos = [newPos.left, newPos.top];
 
-    setSrt(newSrt);
+    dispatch({
+      type: "SET_SUBTITLES",
+      payload: newSrt,
+    });
   };
 
   const handleSubtitleEdit = (index, newText) => {
-    const newSrt = [...srt];
+    const newSrt = [...subtitles];
     newSrt[index].text = newText;
 
-    setSrt(newSrt);
+    dispatch({
+      type: "SET_SUBTITLES",
+      payload: newSrt,
+    });
   };
 
   return (
@@ -78,10 +79,10 @@ const EditPage = () => {
             height: 80,
           }}>
           FRAME
-          {selected.frame} / {frameCount}
+          {selected.frame} / {Object.keys(frames).length}
         </div>
         <FrameDetector
-          length={frameCount}
+          length={frames.length}
           selected={selected.frame}
           handleSelected={handleSelected}
         />
@@ -95,25 +96,21 @@ const EditPage = () => {
             height: 80,
           }}>
           SCENE
-          {selected.scene} / {srt.length}
+          {selected.scene} / {subtitles.length - 1}
         </div>
         <FrameDetector
-          length={srt.length}
+          length={subtitles.length - 1}
           selected={selected.scene}
           handleSelected={handleSelected}
           scene
-          previews={srt.map((sub) => sub.startFrame)}
+          previews={subtitles.map((sub) => sub?.startFrame)}
         />
       </Nav>
       <Main>
-        {srt?.length && (
+        {subtitles?.length && (
           <Editor
             maxWidth={1440}
             selected={selected.frame}
-            subtitles={srt.filter(
-              ({ startFrame, endFrame }) =>
-                startFrame <= selected.frame && endFrame >= selected.frame
-            )}
             onSubtitleMove={handleSubtitleMove}
             onSubtitleEdit={handleSubtitleEdit}
           />
