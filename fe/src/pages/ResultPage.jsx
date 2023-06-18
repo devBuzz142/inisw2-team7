@@ -6,6 +6,7 @@ import { useStateContext } from "../context/StateProvider";
 
 const ResultPage = () => {
   const videoRef = useRef(null);
+  const [videoUrl, setVideoUrl] = useState(null);
 
   const { state, dispatch } = useStateContext();
   const { resultUrl } = state;
@@ -14,7 +15,10 @@ const ResultPage = () => {
     try {
       const file = await fetch(resultUrl);
       const fileBlob = await file.blob();
+
       const fileUrl = URL.createObjectURL(fileBlob);
+      setVideoUrl(fileUrl);
+
       const fileLink = document.createElement("a");
 
       fileLink.display = "none";
@@ -36,10 +40,10 @@ const ResultPage = () => {
         <button onClick={handleDownloadClick}>Download</button>
       </Nav>
       <Main>
-        {resultUrl && (
+        {videoUrl && (
           <div style={{ marginTop: "20px" }}>
             <video width="320" height="240" controls ref={videoRef}>
-              <source src={resultUrl} type="video/mp4" />
+              <source src={videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>

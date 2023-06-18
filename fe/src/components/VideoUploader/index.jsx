@@ -79,7 +79,7 @@ const VideoUploader = ({ language }) => {
         fileUrl;
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
+    await new Promise((resolve) => setTimeout(resolve, 1000 * 5));
 
     dispatch({
       type: "SET_FRAMES",
