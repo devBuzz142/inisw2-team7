@@ -42,9 +42,7 @@ const ResultPage = () => {
 
   return (
     <PageTemplate pageName="Result">
-      <Nav>
-        <button onClick={handleDownloadClick}>Download</button>
-      </Nav>
+      <Nav></Nav>
       <Main>
         {videoUrl && (
           <div style={{ marginTop: "20px" }}>
@@ -54,6 +52,24 @@ const ResultPage = () => {
             </video>
           </div>
         )}
+        <div
+          style={{
+            width: "100%",
+
+            display: "flex",
+            justifyContent: "center",
+          }}>
+          <button
+            disabled={!videoUrl}
+            onClick={handleDownloadClick}
+            style={{
+              fontSize: "36px",
+              paddingLeft: "180px",
+              paddingRight: "180px",
+            }}>
+            Download
+          </button>
+        </div>
       </Main>
     </PageTemplate>
   );

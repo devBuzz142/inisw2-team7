@@ -88,12 +88,16 @@ const EditPage = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             height: 80,
           }}>
-          SCENE
-          {selected.scene} / {subtitles.length - 1}
+          <div>SCENE</div>
+          <div>
+            {selected.scene === -1 ? "-" : selected.scene} /{" "}
+            {subtitles.length - 1}
+          </div>
         </div>
         <FrameDetector
           length={subtitles.length - 1}
@@ -107,12 +111,15 @@ const EditPage = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             height: 80,
           }}>
-          FRAME
-          {selected.frame} / {Object.keys(frames).length}
+          <div>FRAME</div>
+          <div>
+            {selected.frame} / {Object.keys(frames).length}
+          </div>
         </div>
         <FrameDetector
           length={frames.length}

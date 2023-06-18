@@ -104,11 +104,11 @@ const VideoUploader = ({ language, setIsLoading }) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
 
         marginTop: "8px",
         marginBottom: "8px",
+        marginLeft: "120px",
       }}>
       <div style={{ paddingTop: 24 }}>
         <input
@@ -118,25 +118,29 @@ const VideoUploader = ({ language, setIsLoading }) => {
           id="videoInput"
           style={{ display: "none" }}
         />
-        <label htmlFor="videoInput" className="Button">
+        <label htmlFor="videoInput" className="button-label">
           {video ? "동영상 선택" : "동영상 변경"}
         </label>
         <button
           onClick={handleUpload}
           disabled={!video}
-          style={{ marginLeft: "8px" }}>
+          style={{
+            fontSize: "20px",
+            width: "280px",
+            marginLeft: "8px",
+          }}>
           자막 생성
         </button>
       </div>
       {
         <div style={{ marginTop: "20px" }}>
           {videoUrl ? (
-            <video width="1080" controls ref={videoRef}>
+            <video width="1080px" controls ref={videoRef}>
               <source src={videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (
-            <img src="/src/assets/cover.jpg" width="1080" />
+            <img src="/src/assets/cover.png" width="1080" />
           )}
         </div>
       }

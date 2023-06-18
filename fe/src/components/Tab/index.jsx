@@ -14,7 +14,11 @@ export const Tab = ({ children, label, activeTab, setActiveTab }) => {
   const haneldClick = (index) => setActiveTab(index);
 
   return (
-    <div className="Tab">
+    <div
+      className="Tab"
+      style={{
+        paddingTop: 48,
+      }}>
       <div className="Tab_Label">
         <h2>{label}</h2>
       </div>
