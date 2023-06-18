@@ -96,7 +96,7 @@ const EditPage = () => {
           previews={subtitles.map((sub) => sub?.startFrame)}
         />
       </Nav>
-      <Nav>
+      <Nav logo={false}>
         <div
           style={{
             display: "flex",
@@ -129,9 +129,23 @@ const EditPage = () => {
             display: "flex",
             justifyContent: "space-evenly",
           }}>
-          <button>Restore</button>
-          <button disabled={isLoading} onClick={handleEditClick}>
-            Edit
+          <button
+            style={{
+              fontSize: 24,
+              paddingLeft: 120,
+              paddingRight: 120,
+            }}>
+            처음으로
+          </button>
+          <button
+            disabled={isLoading}
+            onClick={handleEditClick}
+            style={{
+              fontSize: 24,
+              paddingLeft: 120,
+              paddingRight: 120,
+            }}>
+            자막 수정
           </button>
         </div>
       </Main>

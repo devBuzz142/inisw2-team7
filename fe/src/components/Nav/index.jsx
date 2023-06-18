@@ -1,12 +1,12 @@
 import Logo from "../Logo";
 
-const Nav = ({ children }) => {
+const Nav = ({ children, logo = true }) => {
   return (
     <div className="Nav Nav-bar">
       <div
         className="Nav-logo"
         style={{ display: "flex", justifyContent: "center" }}>
-        <Logo />
+        {logo && <Logo />}
       </div>
       <div className="Nav-item-container">{children}</div>
     </div>
