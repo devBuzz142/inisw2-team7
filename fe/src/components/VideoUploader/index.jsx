@@ -7,7 +7,7 @@ import { useStateContext } from "../../context/StateProvider";
 const VideoUploader = () => {
   const navigate = useNavigate();
 
-  const { dispatch } = useStateContext();
+  const { state, dispatch } = useStateContext();
 
   const [video, setVideo] = useState();
   const [videoUrl, setVideoUrl] = useState();
@@ -42,7 +42,7 @@ const VideoUploader = () => {
     const zip = await jszip.loadAsync(arrayBuffer);
 
     // zip 파일의 각 항목에 대해 압축 해제
-    const frames = [null];
+    const frames = {};
 
     await zip.forEach(async (relativePath, file) => {
       if (relativePath === "pyframe/") return;
@@ -61,7 +61,7 @@ const VideoUploader = () => {
 
         dispatch({
           type: "SET_SELECTED",
-          payload: { frame: subs[0].startFrame, scene: 0 },
+          payload: { frame: subs[0].startFrame, scene: 1 },
         });
         dispatch({
           type: "SET_SUBTITLES",
@@ -73,13 +73,19 @@ const VideoUploader = () => {
 
       const fileBlob = await file.async("blob");
       const fileUrl = URL.createObjectURL(fileBlob);
-      frames.push(fileUrl);
+      frames[Number(relativePath.replace(".jpg", "").replace("pyframe/", ""))] =
+        fileUrl;
     });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
 
     dispatch({
       type: "SET_FRAMES",
-      payload: frames,
+      payload: { ...frames, frameCount: Object.keys(frames).length },
     });
+
+    // image loading...
+    await new Promise((resolve) => setTimeout(resolve, 1000 * 4));
 
     navigate("/edit");
   };

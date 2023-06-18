@@ -1,6 +1,5 @@
 import Editor from "../components/Editor";
 import FrameDetector from "../components/Frame";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTemplate from "./PageTemplate";
 import Nav from "../components/Nav";
@@ -13,7 +12,6 @@ const EditPage = () => {
 
   const { state, dispatch } = useStateContext();
   const { selected, subtitles, frames } = state;
-  console.log(state);
 
   const handleSelected = (type, index) => {
     if (type === "frame") {
@@ -41,31 +39,6 @@ const EditPage = () => {
     editVideo(subtitles);
     navigate("/result");
   };
-
-  useEffect(() => {
-    // (async () => {
-    //   const subtitles = await fetchSubtitles();
-    //   const subs = subtitles.map((sub, index) => ({
-    //     index,
-    //     startFrame: sub.start_frame,
-    //     endFrame: sub.end_frame,
-    //     text: sub.text,
-    //     pos: sub.pos,
-    //   }));
-    //   dispatch({
-    //     type: "SET_SELECTED",
-    //     payload: { frame: subs[0].startFrame, scene: 0 },
-    //   });
-    //   dispatch({
-    //     type: "SET_FRAME_COUNT",
-    //     payload: FRAME_LEN,
-    //   });
-    //   dispatch({
-    //     type: "SET_SUBTITLES",
-    //     payload: subs,
-    //   });
-    // })();
-  }, []);
 
   const handleSubtitleMove = (index, newPos) => {
     const newSrt = [...subtitles];
@@ -98,7 +71,7 @@ const EditPage = () => {
             height: 80,
           }}>
           FRAME
-          {selected.frame} / {frames.length}
+          {selected.frame} / {frames.frameCount}
         </div>
         <FrameDetector
           length={frames.length}
@@ -122,7 +95,7 @@ const EditPage = () => {
           selected={selected.scene}
           handleSelected={handleSelected}
           scene
-          previews={subtitles.map((sub) => sub.startFrame)}
+          previews={[null, ...subtitles.map((sub) => sub.startFrame)]}
         />
       </Nav>
       <Main>
@@ -130,10 +103,6 @@ const EditPage = () => {
           <Editor
             maxWidth={1440}
             selected={selected.frame}
-            subtitles={subtitles.filter(
-              ({ startFrame, endFrame }) =>
-                startFrame <= selected.frame && endFrame >= selected.frame
-            )}
             onSubtitleMove={handleSubtitleMove}
             onSubtitleEdit={handleSubtitleEdit}
           />

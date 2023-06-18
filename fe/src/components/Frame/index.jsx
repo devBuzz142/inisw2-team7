@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { useStateContext } from "../../context/StateProvider";
 
 const FrameItem = ({ src, frame, width, isSelected, onClick, itemRef }) => {
   return (
@@ -25,17 +26,14 @@ const FrameItem = ({ src, frame, width, isSelected, onClick, itemRef }) => {
   );
 };
 
-const FrameDetector = ({
-  length,
-  selected,
-  handleSelected,
-  scene,
-  previews,
-}) => {
+const FrameDetector = ({ selected, handleSelected, scene, previews }) => {
   const scrollRef = useRef(null);
   const selectedRef = useRef(null);
   const frameWidth = 120;
   const frameHeight = 80;
+
+  const { state } = useStateContext();
+  const { subtitles, frames } = state;
 
   useEffect(() => {
     if (scrollRef.current && selectedRef.current) {
@@ -58,32 +56,19 @@ const FrameDetector = ({
 
         overflowY: "scroll",
       }}>
-      {Array(length)
+      {Array(scene ? subtitles.length : frames.frameCount)
         .fill(0)
-        .map((_, index) => {
-          const itemIndex = scene ? index : index + 1;
-
-          return (
-            <FrameItem
-              itemRef={itemIndex === selected ? selectedRef : null}
-              key={"frame" + itemIndex}
-              frame={itemIndex + 1}
-              width={frameWidth}
-              isSelected={itemIndex === selected}
-              src={
-                "/src/assets/loki01/pyframes/" +
-                String(scene ? previews[itemIndex] : itemIndex).padStart(
-                  6,
-                  "0"
-                ) +
-                ".jpg"
-              }
-              onClick={() =>
-                handleSelected(scene ? "scene" : "frame", itemIndex)
-              }
-            />
-          );
-        })}
+        .map((_, index) => (
+          <FrameItem
+            itemRef={index === selected ? selectedRef : null}
+            key={"frame" + index}
+            frame={index + 1}
+            width={frameWidth}
+            isSelected={index === selected}
+            src={frames[scene ? previews[index] : index]}
+            onClick={() => handleSelected(scene ? "scene" : "frame", index)}
+          />
+        ))}
     </div>
   );
 };
