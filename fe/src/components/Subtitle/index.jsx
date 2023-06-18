@@ -100,10 +100,9 @@ const Subtitle = ({
         top: top,
         left: left,
 
-        color: "black",
-        backgroundColor: "rgba(255,255,255, 0.4)",
+        padding: 8,
 
-        cursor: "grab",
+        color: "black",
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -111,7 +110,13 @@ const Subtitle = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
       <Badge hidden={!isHover} onClick={handleEdit} isEdit={isEdit} />
-      <div className="subtitle-textbox">
+      <div
+        className="subtitle-text"
+        style={{
+          padding: 2,
+          backgroundColor: "rgba(255,255,255, 0.4)",
+          cursor: "grab",
+        }}>
         {isEdit ? (
           <>
             <input type="text" value={editedText} onChange={handleTextChange} />
