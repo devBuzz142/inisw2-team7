@@ -52,7 +52,7 @@ const VideoUploader = ({ language }) => {
         const subtitles = data.data;
 
         const subs = subtitles.map((sub, index) => ({
-          index,
+          index: index + 1,
           startTime: sub.start_time,
           endTime: sub.end_time,
           startFrame: sub.start_frame,
@@ -67,7 +67,7 @@ const VideoUploader = ({ language }) => {
         });
         dispatch({
           type: "SET_SUBTITLES",
-          payload: subs,
+          payload: [null, ...subs],
         });
 
         return;
@@ -83,7 +83,7 @@ const VideoUploader = ({ language }) => {
 
     dispatch({
       type: "SET_FRAMES",
-      payload: { ...frames, frameCount: Object.keys(frames).length },
+      payload: frames,
     });
 
     // image loading...

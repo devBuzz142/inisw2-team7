@@ -9,8 +9,8 @@ const Editor = ({ onSubtitleMove, onSubtitleEdit, maxWidth = 1440 }) => {
   const { subtitles, selected, frames } = state;
 
   const frameSubtitles = subtitles.filter(
-    ({ startFrame, endFrame }) =>
-      startFrame <= selected.frame && endFrame >= selected.frame
+    (sub) =>
+      sub?.startFrame <= selected.frame && sub?.endFrame >= selected.frame
   );
 
   const [imagePos, setImagePos] = useState({

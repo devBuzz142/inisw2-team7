@@ -17,7 +17,7 @@ const EditPage = () => {
     if (type === "frame") {
       const frameIndex = index;
       const sceneIndex = subtitles.findIndex(
-        (sub) => sub.startFrame <= frameIndex && sub.endFrame >= frameIndex
+        (sub) => sub?.startFrame <= frameIndex && sub?.endFrame >= frameIndex
       );
 
       dispatch({
@@ -79,7 +79,7 @@ const EditPage = () => {
             height: 80,
           }}>
           FRAME
-          {selected.frame} / {frames.frameCount}
+          {selected.frame} / {Object.keys(frames).length}
         </div>
         <FrameDetector
           length={frames.length}
@@ -96,14 +96,14 @@ const EditPage = () => {
             height: 80,
           }}>
           SCENE
-          {selected.scene} / {subtitles.length}
+          {selected.scene} / {subtitles.length - 1}
         </div>
         <FrameDetector
-          length={subtitles.length}
+          length={subtitles.length - 1}
           selected={selected.scene}
           handleSelected={handleSelected}
           scene
-          previews={[null, ...subtitles.map((sub) => sub.startFrame)]}
+          previews={subtitles.map((sub) => sub?.startFrame)}
         />
       </Nav>
       <Main>

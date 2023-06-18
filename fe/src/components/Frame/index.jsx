@@ -56,19 +56,20 @@ const FrameDetector = ({ selected, handleSelected, scene, previews }) => {
 
         overflowY: "scroll",
       }}>
-      {Array(scene ? subtitles.length : frames.frameCount)
+      {Array(scene ? subtitles.length : Object.keys(frames).length)
         .fill(0)
         .map((_, index) => (
           <FrameItem
             itemRef={index === selected ? selectedRef : null}
             key={"frame" + index}
-            frame={index + 1}
+            frame={index}
             width={frameWidth}
             isSelected={index === selected}
             src={frames[scene ? previews[index] : index]}
             onClick={() => handleSelected(scene ? "scene" : "frame", index)}
           />
-        ))}
+        ))
+        .slice(1)}
     </div>
   );
 };
