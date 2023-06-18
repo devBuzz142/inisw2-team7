@@ -95,7 +95,8 @@ const EditPage = () => {
           }}>
           <div>SCENE</div>
           <div>
-            {selected.scene} / {subtitles.length - 1}
+            {selected.scene === -1 ? "-" : selected.scene} /{" "}
+            {subtitles.length - 1}
           </div>
         </div>
         <FrameDetector

@@ -60,6 +60,7 @@ const ResultPage = () => {
             justifyContent: "center",
           }}>
           <button
+            disabled={!videoUrl}
             onClick={handleDownloadClick}
             style={{
               fontSize: "36px",
