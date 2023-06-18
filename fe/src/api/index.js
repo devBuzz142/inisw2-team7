@@ -27,11 +27,18 @@ const uploadVideo = async (video) => {
 };
 
 const editVideo = async (subtitles) => {
+  const sub = subtitles.map((subtitle) => ({
+    start_time: subtitle.startTime,
+    end_time: subtitle.endTime,
+    text: subtitle.text,
+    pos: subtitle.pos,
+  }));
+
   try {
     const response = await fetch(EDIT_URL, {
       method: "POST",
       contentType: "application/json",
-      body: JSON.stringify({ data: subtitles }),
+      body: JSON.stringify({ data: sub }),
     });
 
     if (!response.ok) {
@@ -41,7 +48,8 @@ const editVideo = async (subtitles) => {
     const json = await response.json();
     const { data } = json;
     const { url } = data;
-    console.log("Download url:", url);
+
+    return url;
   } catch (error) {
     console.error("Error in uploading file:", error);
   }

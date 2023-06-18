@@ -53,6 +53,8 @@ const VideoUploader = () => {
 
         const subs = subtitles.map((sub, index) => ({
           index,
+          startTime: sub.start_time,
+          endTime: sub.end_time,
           startFrame: sub.start_frame,
           endFrame: sub.end_frame,
           text: sub.text,

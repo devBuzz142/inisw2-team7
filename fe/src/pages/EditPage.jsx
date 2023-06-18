@@ -35,8 +35,10 @@ const EditPage = () => {
     }
   };
 
-  const handleEditClick = () => {
-    editVideo(subtitles);
+  const handleEditClick = async () => {
+    const url = await editVideo(subtitles);
+    console.log(url);
+
     navigate("/result");
   };
 
