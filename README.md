@@ -35,12 +35,8 @@
 
 
 ### 기술 스택
-| | |
-|---|---|
-| FE | JavaScript, React, Vite |
-| BE | Django |
-| Model | WhisperX, S3FD, Light-ASD |
-| ETC | MoviePy |
+
+<img width='720' src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/47de13f8-38b5-465a-9255-d50b58659bf3' />
 
 
 <br>
