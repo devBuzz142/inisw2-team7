@@ -47,16 +47,39 @@
 
 ## 기타
 ### 실행방법
+
+깃 레포 다운로드
 ```
 git clone https://github.com/devBuzz142/inisw2-team7.git
-cd inisw2-team7
+```
+- ./fe : 프론트엔드 폴더
+- ./server/whospeak : 서버 및 모델 구동 폴더
+- ./Light-ASD : 화자탐지 모델 폴더
 
-// fe 실행방법
-cd fe   // cd ~path/inisw-team7/fe
+FE 실행방법
+```
+// @inisw2-team7
+cd fe
 yarn add // npm install
 yarn dev // npm run dev
 // run on localhost:5137
+```
 
-// be && model 실행방법
-
+BE && Model 실행방법
+1. https://imagemagick.org/script/download.php 에서 환경에 따른 ‘ImageMagick.exe’ 다운 → 자막합성시 TextClip 불러오는데 필요
+2. 패키지 설치
+```
+// @inisw2-team7
+pip install -r requirement.txt
+```
+3. whisperX 다운
+```
+pip install git+https://github.com/m-bain/whisperx.git
+```
+4. 서버 실행
+```
+@ /inisw2-team7
+cd server/whospeak
+python manage.py runserver
+// run on localhost:8000
 ```
