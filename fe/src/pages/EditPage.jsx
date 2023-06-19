@@ -77,7 +77,9 @@ const EditPage = () => {
   const handleRestoreClick = () => {
     dispatch({
       type: "SET_SUBTITLES",
-      payload: originals,
+      payload: originals.map((orig) =>
+        orig ? { ...orig, pos: [...orig.pos] } : null
+      ),
     });
   };
 

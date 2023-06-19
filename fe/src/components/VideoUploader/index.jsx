@@ -63,6 +63,16 @@ const VideoUploader = ({ language, setIsLoading }) => {
           pos: sub.pos,
         }));
 
+        const origs = subtitles.map((sub, index) => ({
+          index: index + 1,
+          startTime: sub.start_time,
+          endTime: sub.end_time,
+          startFrame: sub.start_frame,
+          endFrame: sub.end_frame,
+          text: sub.text,
+          pos: sub.pos,
+        }));
+
         dispatch({
           type: "SET_SELECTED",
           payload: { frame: subs[0].startFrame, scene: 1 },
@@ -73,7 +83,7 @@ const VideoUploader = ({ language, setIsLoading }) => {
         });
         dispatch({
           type: "SET_ORIGINALS",
-          payload: [null, ...subs.map((sub) => ({ ...sub }))],
+          payload: [null, ...origs],
         });
 
         return;
