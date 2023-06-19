@@ -15,10 +15,9 @@
 
 | 김기연 | 김현명 | 박현규 | 이현우 | 정종관 | 제현재 | 황재남 |
 | --- | --- | --- | --- | --- | --- | --- |
-| <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/8d0fcb90-d763-4d4b-944e-9a2f754a5ca2' width='150' />  | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/5d1bc503-f7f7-4214-8e8f-616e058c5a09' width='150' /> |  |  | <img src='https://user-images.githubusercontent.com/97934878/176351807-7934715a-17c7-4efd-84d1-713c45af5794.png' width='150' />  | |  |
+| <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/8d0fcb90-d763-4d4b-944e-9a2f754a5ca2' width='150' />  | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/5d1bc503-f7f7-4214-8e8f-616e058c5a09' width='150' /> | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/7fb48c6f-57fa-4b67-864b-91ce05448fb7' width='150' /> | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/6b7a138e-37c3-4568-88bd-73ca15edfdef' width='150' /> | <img src='https://user-images.githubusercontent.com/97934878/176351807-7934715a-17c7-4efd-84d1-713c45af5794.png' width='150' />  | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/9d66ac4a-b2be-43d2-9a8b-31d6556a0d94' width='150' /> | <img src='https://github.com/devBuzz142/inisw2-team7/assets/19660039/eb4f82c1-df5d-4466-9e93-b8173f2e1c57' width='150' /> |
 
 <br>
-
 
 
 ## 프로젝트 구조
@@ -38,9 +37,10 @@
 ### 기술 스택
 | | |
 |---|---|
-| FE | JavaScript, React |
+| FE | JavaScript, React, Vite |
 | BE | Django |
 | Model | WhisperX, S3FD, Light-ASD |
+| ETC | MoviePy |
 
 
 <br>
