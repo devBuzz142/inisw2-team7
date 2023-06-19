@@ -14,14 +14,20 @@ from scenedetect.detectors import ContentDetector
 
 from model.faceDetector.s3fd import S3FD
 from talkNet import talkNet
+import time
 
 warnings.filterwarnings("ignore")
+print("=" * 50)
+print()
+print('TalkNet 모델 실행 중...')
+print()
+start = time.time()
 
 parser = argparse.ArgumentParser(description = "TalkNet Demo or Columnbia ASD Evaluation")
 
 parser.add_argument('--videoName',             type=str, default="001",   help='Demo video name')
 parser.add_argument('--videoFolder',           type=str, default="demo",  help='Path for inputs, tmps and outputs')
-parser.add_argument('--pretrainModel',         type=str, default="pretrain_TalkSet.model",   help='Path for the pretrained TalkNet model')
+parser.add_argument('--pretrainModel',         type=str, default="sevenTeam_talknet.model",   help='Path for the pretrained TalkNet model')
 
 parser.add_argument('--nDataLoaderThread',     type=int,   default=10,   help='Number of workers')
 parser.add_argument('--facedetScale',          type=float, default=0.25, help='Scale factor for face detection, the frames will be scale to 0.25 orig')
@@ -453,6 +459,13 @@ def main():
 	else:
 		# Visualization, save the result as the new video	
 		visualization(vidTracks, scores, args)	
+	
+	end = time.time()
+
+	print()
+	print('TalkNet 모델 실행 완료')
+	print(f"🕒걸린 시간 : {end - start:.2f} sec")
+	print()
 
 if __name__ == '__main__':
     main()

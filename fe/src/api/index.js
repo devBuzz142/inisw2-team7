@@ -6,7 +6,7 @@ const EDIT_URL = LOCAL + "/video/edit/";
 
 const uploadVideo = async (video, language) => {
   const formData = new FormData();
-  await formData.append("video", video, "video-orig.mp4");
+  await formData.append("video", video);
   await formData.append("language", language);
 
   try {

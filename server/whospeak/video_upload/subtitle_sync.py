@@ -3,6 +3,7 @@ from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
 from moviepy.video.tools.subtitles import SubtitlesClip
 from googletrans import Translator
 from langdetect import detect
+import numpy as np
 import codecs
 import pickle
 import argparse
@@ -75,12 +76,20 @@ def prevent_out(x, y, video, subtitles_clip):
     yy = min(max(0.02*video.h, y), 0.98*video.h - subtitles_clip.h)
     return xx, yy
 
+# l2_norm 함수
+def l2_norm(vector):
+    squared_sum = np.sum(np.square(vector))
+    norm = np.sqrt(squared_sum)
+    return norm
+
 
 # 자막이 배치된 리스트
 subtitles_clip = []
 # 화자 기준 자막 배치 위치 리스트
 po_loc = []
 point_loc = []
+# 위치 중점 리스트
+pointmid_loc = []
 # 화자 tracking 리스트
 po_tra = []
 # 추출할 pickle 파일
@@ -147,6 +156,7 @@ while k < len(lines):
     if [d['bbox'] for d in top_face] == []:
         text_clip = text_clip.set_position((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
         point_loc.append((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
+        # print('_______')
         
     # score가 0보다 작으면 화자가 없으므로 아래쪽에 자막 배치
     elif float(top_face[0]['score']) < 0:
@@ -176,16 +186,15 @@ while k < len(lines):
             sub_change = False
             # 만들어진 자막이 다른 bbox에 겹칠때
             for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
-                if ((min(max(x_1, x), x_2) == x) or (min(max(x_1, x+text_clip.w), x_2) == x+text_clip.w)) and ((min(max(y_1, y), y_2) == y) or (min(max(y_1, y+text_clip.h), y_2) == y+text_clip.h)):
+                if max(0, min(x+text_clip.w, x_2) - max(x, x_1)) * max(0, min(y+text_clip.h, y_2) - max(y, y_1)) > 0:
                     sub_change = True
-                    print(x_1, y_1, x_2, y_2)
                     
             if sub_change == False:
                 point_loc.append((x, y))
                 
             # 만들어진 자막이 다른 bbox에 겹칠때
             else:
-                print(x,y, x+text_clip.w, y+text_clip.h)
+                # print(x,y, x+text_clip.w, y+text_clip.h)
                 # 자막의 후보 위치 선정
                 x3, y3 = x1, y1 - text_clip.h
                 x4, y4 = x2, y1 - text_clip.h
@@ -207,14 +216,11 @@ while k < len(lines):
                 # 겹치면 True로 변경
                 for i in range(5):
                     for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
-                        if (
-                            (min(max(x_1, plist_p[i][0]), x_2) == plist_p[i][0])\
-                        or (min(max(x_1, plist_p[i][0]+text_clip.w), x_2) == plist_p[i][0]+text_clip.w))\
-                        and ((min(max(y_1, plist_p[i][1]), y_2) == plist_p[i][1])\
-                        or (min(max(y_1, plist_p[i][1]+text_clip.h), y_2) == plist_p[i][1]+text_clip.h)):
+                        if max(0, min(plist_p[i][0]+text_clip.w, x_2) - max(plist_p[i][0], x_1)) * \
+                        max(0, min(plist_p[i][1]+text_clip.h, y_2) - max(plist_p[i][1], y_1)) > 0:
                             sub_change2[i] = True
                             
-                print(sub_change2)
+                # print(sub_change2)
                 
                 # 자막의 각 후보중에 bbox에 겹치지 않는 후보의 중점 리스트 생성
                 pointmid_lst = []
@@ -225,23 +231,41 @@ while k < len(lines):
                         pointmid_lst.append(((2*x+text_clip.w)/2, (2*y+text_clip.h)))
                 # print(pointmid_lst)
                 
-                # 자막의 각 후보의 중점에서 bbox의 중점리스트 사이의 거리 합 리스트 생성
-                dis_lst = []
+                # 자막의 각 후보의 energy 합 리스트 생성
+                elst = []
                 for num, (x, y) in enumerate(pointmid_lst):
-                    dis = 0
+                    e = 0
                     if pointmid_lst[num] == (True, True):
-                        dis_lst.append(0)
+                        elst.append(e)
                     else:
+                        dis_lst = []
                         for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
                             bx_mid = (x_1+x_2)/2
                             by_mid = (y_1+y_2)/2
-                            dis += ((x - bx_mid)**2 + (y - by_mid)**2)**0.5
-                        dis_lst.append(dis)
+                            dis_lst.append(((x - bx_mid)**2 + (y - by_mid)**2)**0.5)
+                            
+                        # l2_norm 구하기
+                        norm = l2_norm(dis_lst)
+                        
+                        # l2_norm으로 정규화
+                        norm_lst = dis_lst/norm
+                        
+                        # 점의 lcoal energy
+                        elocal = 0
+                        for d in norm_lst:
+                            elocal += np.sum(np.exp(-10 * d**2))
+                        
+                        # 점의 global energy
+                        eglo = (((pointmid_lst[-1][0] - x)**2 + (pointmid_lst[-1][1] - y)**2)**0.5)/norm
+                        
+                        # 점의 layout energy
+                        elay = max(x, y, video.w - x, video.h - y)/norm
+                        elst.append(elocal+eglo-0.01*elay)
                 
-                # 거리 합이 가장 큰 후보 찾기
+                # energy 합이 가장 작은 후보 찾기
                 loc = 0
-                for i in dis_lst:
-                    if i == max(dis_lst):
+                for i in elst:
+                    if i == min(elst):
                         break
                     loc += 1
                 
@@ -272,11 +296,12 @@ while k < len(lines):
         po_tra.append([d['track'] for d in top_face][0])
     po_loc.append(loc)
     
-
+    #print([d['bbox'] for d in top_face][0][0]+text_clip.w, [d['bbox'] for d in top_face][0][1]+text_clip.h)
+    #print([d['bbox'] for d in top_face])
     #print('--------------')
+    pointmid_loc.append((point_loc[-1][0]+0.5*text_clip.w, point_loc[-1][1]+0.5*text_clip.h))
     out_pickle.append({'start_frame': start, 'end_frame': end, 'pos': point_loc[-1], 'text': text, 'start_time': start_time, 'end_time': end_time})
     subtitles_clip.append(text_clip)
-
 
 output_path = os.path.join(os.pardir, 'media', 'mid_json', f'{file_nm}.json')
 
