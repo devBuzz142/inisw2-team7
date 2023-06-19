@@ -46,9 +46,6 @@
 <br>
 
 ## 기타
-
-### 사용방법
-
 ### 실행방법
 ```
 git clone https://github.com/devBuzz142/inisw2-team7.git
