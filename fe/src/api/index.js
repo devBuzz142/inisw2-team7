@@ -1,8 +1,8 @@
 const REMOTE = "http://20.214.104.8:8000";
 const LOCAL = "http://localhost:8000";
 
-const UPLOAD_URL = REMOTE + "/video/upload/";
-const EDIT_URL = REMOTE + "/video/edit/";
+const UPLOAD_URL = LOCAL + "/video/upload/";
+const EDIT_URL = LOCAL + "/video/edit/";
 
 const uploadVideo = async (video, language) => {
   const formData = new FormData();
