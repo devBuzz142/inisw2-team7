@@ -1,0 +1,22 @@
+# SERVER
+pip install django
+pip install django-cors-headers
+
+
+# subtitle_sync
+# merge_video
+pip install moviepy
+pip install googletrans==4.0.0-rc1
+pip install langdetect
+
+# ASD
+pip install pandas
+pip install scipy
+pip install scikit-learn
+pip install python_speech_features
+pip install opencv-python
+pip install scenedetect
+pip install gdown
+pip install ffmpeg
+
+pip install torch==2.0.0+cu117 torchvision==0.15.1+cu117 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu117
