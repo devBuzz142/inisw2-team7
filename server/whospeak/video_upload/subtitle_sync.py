@@ -253,7 +253,7 @@ while k < len(lines):
                         # 점의 lcoal energy
                         elocal = 0
                         for d in norm_lst:
-                            elocal += np.sum(np.exp(-10 * d**2))
+                            elocal += np.exp(-10 * d**2)*d*norm
                         
                         # 점의 global energy
                         eglo = (((pointmid_lst[-1][0] - x)**2 + (pointmid_lst[-1][1] - y)**2)**0.5)/norm
