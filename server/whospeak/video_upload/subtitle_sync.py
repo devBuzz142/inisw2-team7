@@ -156,7 +156,6 @@ while k < len(lines):
     if [d['bbox'] for d in top_face] == []:
         text_clip = text_clip.set_position((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
         point_loc.append((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
-        # print('_______')
         
     # score가 0보다 작으면 화자가 없으므로 아래쪽에 자막 배치
     elif float(top_face[0]['score']) < 0:
@@ -194,7 +193,6 @@ while k < len(lines):
                 
             # 만들어진 자막이 다른 bbox에 겹칠때
             else:
-                # print(x,y, x+text_clip.w, y+text_clip.h)
                 # 자막의 후보 위치 선정
                 x3, y3 = x1, y1 - text_clip.h
                 x4, y4 = x2, y1 - text_clip.h
@@ -219,8 +217,6 @@ while k < len(lines):
                         if max(0, min(plist_p[i][0]+text_clip.w, x_2) - max(plist_p[i][0], x_1)) * \
                         max(0, min(plist_p[i][1]+text_clip.h, y_2) - max(plist_p[i][1], y_1)) > 0:
                             sub_change2[i] = True
-                            
-                # print(sub_change2)
                 
                 # 자막의 각 후보중에 bbox에 겹치지 않는 후보의 중점 리스트 생성
                 pointmid_lst = []
@@ -229,7 +225,6 @@ while k < len(lines):
                         pointmid_lst.append((True, True))
                     else:
                         pointmid_lst.append(((2*x+text_clip.w)/2, (2*y+text_clip.h)))
-                # print(pointmid_lst)
                 
                 # 자막의 각 후보의 energy 합 리스트 생성
                 elst = []
@@ -269,7 +264,6 @@ while k < len(lines):
                         break
                     loc += 1
                 
-                print(text)
                 # 그 후보에 자막 배치
                 text_clip = text_clip.set_position([plist_p[loc][0], plist_p[loc][1]])
                 
@@ -296,9 +290,6 @@ while k < len(lines):
         po_tra.append([d['track'] for d in top_face][0])
     po_loc.append(loc)
     
-    #print([d['bbox'] for d in top_face][0][0]+text_clip.w, [d['bbox'] for d in top_face][0][1]+text_clip.h)
-    #print([d['bbox'] for d in top_face])
-    #print('--------------')
     pointmid_loc.append((point_loc[-1][0]+0.5*text_clip.w, point_loc[-1][1]+0.5*text_clip.h))
     out_pickle.append({'start_frame': start, 'end_frame': end, 'pos': point_loc[-1], 'text': text, 'start_time': start_time, 'end_time': end_time})
     subtitles_clip.append(text_clip)
