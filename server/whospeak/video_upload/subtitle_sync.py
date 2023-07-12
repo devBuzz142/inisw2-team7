@@ -113,7 +113,6 @@ while k < len(lines):
         start_time, end_time = lines[k + 1].strip().replace('\r','').split(' --> ')
         text = lines[k + 2].strip()
         k+=4
-        # print(text)
     
     # 자막 생성 안되었을 경우 에러 방지
     if text == '':
