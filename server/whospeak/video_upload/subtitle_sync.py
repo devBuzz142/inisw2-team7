@@ -113,6 +113,7 @@ while k < len(lines):
         start_time, end_time = lines[k + 1].strip().replace('\r','').split(' --> ')
         text = lines[k + 2].strip()
         k+=4
+        # print(text)
     
     # 자막 생성 안되었을 경우 에러 방지
     if text == '':
@@ -146,7 +147,102 @@ while k < len(lines):
     # 자막이 나오는 중간 시간 기준
     mid = int((start+end)//2)
     # score 기준으로 정렬
-    top_face = sorted(faces_score[mid], key=lambda x: x['기
+    top_face = sorted(faces_score[mid], key=lambda x: x['score'], reverse=True)
+    
+    loc = True
+     
+    # print(0.5*video.w - 0.5*text_clip.w)    
+    # 자막의 중간시간 기준으로 나타나는 bounding box가 없을때 아래쪽에 자막 배치
+    if [d['bbox'] for d in top_face] == []:
+        text_clip = text_clip.set_position((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
+        point_loc.append((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
+        
+    # score가 0보다 작으면 화자가 없으므로 아래쪽에 자막 배치
+    elif float(top_face[0]['score']) < 0:
+        text_clip = text_clip.set_position((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
+        point_loc.append((0.5*video.w - 0.5*text_clip.w, 0.95*video.h - text_clip.h))
+
+    else:
+        # score가 가장 큰 bounding box의 1.6배 큰 box의 왼쪽 아래 모서리부분에 자막배치
+        xx1, yy1, xx2, yy2 = [d['bbox'] for d in top_face][0]
+        x1 = xx1 - 0.3*abs(xx2 - xx1)
+        y1 = yy1 - 0.3*abs(yy2 - yy1)
+        x2 = xx2 + 0.3*abs(xx2 - xx1)
+        y2 = yy2 + 0.3*abs(yy2 - yy1)
+        x = min(max(0.02*video.w, x1), 0.98*video.w - text_clip.w)
+        y = min(max(0.02*video.h, y2), 0.98*video.h - text_clip.h)
+        # 자막이 화면 밖으로 나가는 것을 방지
+        text_clip = text_clip.set_position([x, y])
+        
+        loc = False
+            
+        if len([d['bbox'] for d in top_face]) == 1:
+            point_loc.append((x, y))
+            pass
+        
+        # bbox가 여러개일때
+        else:
+            sub_change = False
+            # 만들어진 자막이 다른 bbox에 겹칠때
+            for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
+                if max(0, min(x+text_clip.w, x_2) - max(x, x_1)) * max(0, min(y+text_clip.h, y_2) - max(y, y_1)) > 0:
+                    sub_change = True
+                    
+            if sub_change == False:
+                point_loc.append((x, y))
+                
+            # 만들어진 자막이 다른 bbox에 겹칠때
+            else:
+                # 자막의 후보 위치 선정
+                x3, y3 = x1, y1 - text_clip.h
+                x4, y4 = x2, y1 - text_clip.h
+                x5, y5 = x1 - text_clip.w, y1
+                x6, y6 = x2, y1
+                x7, y7 = x2, y2
+                
+                # 자막의 후보 위치 리스트
+                plist = [(x3,y3),(x4,y4),(x5,y5),(x6,y6),(x7,y7)]
+                
+                # 자막 후보 위치 리스트에 자막 방지 적용
+                plist_p = []
+                for xx_1, yy_1 in plist:
+                    plist_p.append(prevent_out(xx_1, yy_1, video, text_clip))
+                
+                # 각 후보에 자막이 생성되었을 때 bbox에 겹치는 지 리스트
+                sub_change2 = [False, False, False, False, False]
+                
+                # 겹치면 True로 변경
+                for i in range(5):
+                    for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
+                        if max(0, min(plist_p[i][0]+text_clip.w, x_2) - max(plist_p[i][0], x_1)) * \
+                        max(0, min(plist_p[i][1]+text_clip.h, y_2) - max(plist_p[i][1], y_1)) > 0:
+                            sub_change2[i] = True
+                
+                # 자막의 각 후보중에 bbox에 겹치지 않는 후보의 중점 리스트 생성
+                pointmid_lst = []
+                for num, (x, y) in enumerate(plist_p):
+                    if sub_change2[num] == True:
+                        pointmid_lst.append((True, True))
+                    else:
+                        pointmid_lst.append(((2*x+text_clip.w)/2, (2*y+text_clip.h)))
+                
+                # 자막의 각 후보의 energy 합 리스트 생성
+                elst = []
+                for num, (x, y) in enumerate(pointmid_lst):
+                    e = 0
+                    if pointmid_lst[num] == (True, True):
+                        elst.append(e)
+                    else:
+                        dis_lst = []
+                        for x_1, y_1, x_2, y_2 in [d['bbox'] for d in top_face][1:]:
+                            bx_mid = (x_1+x_2)/2
+                            by_mid = (y_1+y_2)/2
+                            dis_lst.append(((x - bx_mid)**2 + (y - by_mid)**2)**0.5)
+                            
+                        # 거리 제곱합 구하기
+                        norm = l2_norm(dis_lst)
+                        
+                        # 거리 제곱합을 이용하여 거리를 (0,1) 범위로 바꾸기
                         norm_lst = dis_lst/norm
                         
                         # 점의 lcoal energy
